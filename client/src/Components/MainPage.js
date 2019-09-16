@@ -2,6 +2,8 @@ import React from 'react';
 import styled from 'styled-components';
 import MainGrid from './MainGrid';
 import TopBar from './TopBar';
+import moment from 'moment';
+import addDays from 'date-fns/addDays';
 
 const MainPageContainer = styled.div`
   font-family: comfortaa;
@@ -20,24 +22,37 @@ export default class MainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dateToday: new Date(),
+      dateToday: this.parseDateIntoString(new Date()),
       userName: 'C.Junxiang',
-      userIcon: ''
+      userIcon: '',
+      currency: 'SGD$',
+      totalSum: '9,872',
+      startDate: new Date(),
+      endDate: addDays(new Date(), -7)
     };
   }
 
-  componentDidMount = () => {
-    console.log(
-      'Ooo.. Look who is here. If you are looking for something... then: Main Page loaded!'
-    );
+  componentDidMount = () => {};
+
+  parseDateIntoString = date => {
+    return moment(date).format('Do MMM dddd h:mm:ss a');
+  };
+  parseSumWithComma = number => {
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+  updateStartEndDates = (startDate, endDate) => {
+    this.setState({
+      startDate: startDate,
+      endDate: endDate
+    });
   };
 
   render() {
-    const { dateToday, userName } = this.state;
+    const { dateToday, userName, currency, totalSum } = this.state;
     return (
       <MainPageContainer>
         <StyledTopBar dateToday={dateToday} userName={userName} />
-        <StyledMainGrid />
+        <StyledMainGrid totalSum={totalSum} currency={currency} update />
       </MainPageContainer>
     );
   }
