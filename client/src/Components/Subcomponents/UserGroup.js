@@ -22,7 +22,10 @@ export default class UserGroup extends React.Component {
     return (
       <Container>
         <Label as='a' image>
-          <img src='https://react.semantic-ui.com/images/avatar/small/joe.jpg' />
+          <img
+            src='https://react.semantic-ui.com/images/avatar/small/joe.jpg'
+            alt='Profile'
+          />
           {userName}
         </Label>
       </Container>
