@@ -25,53 +25,65 @@ export default class UserDropDown extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      open: false
+      openSetup: false
     };
   }
 
   componentDidMount = () => {};
 
-  handleClick = () => {
+  handleSetupClick = () => {
     this.setState({
-      open: !this.state.open
+      openSetup: !this.state.openSetup
     });
   };
 
   render() {
-    const { open } = this.state;
+    const { openSetup } = this.state;
     const {} = this.props;
     return (
       <Container>
         <List component='nav'>
-          <ListItem button>
-            <ListItemIcon>
-              <SendIcon />
-            </ListItemIcon>
-            <ListItemText primary='Sent mail' />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <DraftsIcon />
-            </ListItemIcon>
-            <ListItemText primary='Drafts' />
-          </ListItem>
-          <ListItem button onClick={this.handleClick}>
+          <ListItem button onClick={this.handleSetupClick}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary='Inbox' />
-            {open ? <ExpandLess /> : <ExpandMore />}
+            <ListItemText primary='Set-up' />
+            {openSetup ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          <Collapse in={open} timeout='auto' unmountOnExit>
+          <Collapse in={openSetup} timeout='auto' unmountOnExit>
             <List component='div' disablePadding>
               <ListItem button>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>
-                <ListItemText primary='Starred' />
+                <ListItemText primary='Set initial Sum' />
+              </ListItem>
+              <ListItem button>
+                <ListItemIcon>
+                  <StarBorder />
+                </ListItemIcon>
+                <ListItemText primary='Set target' />
               </ListItem>
             </List>
           </Collapse>
+          <ListItem button>
+            <ListItemIcon>
+              <SendIcon />
+            </ListItemIcon>
+            <ListItemText primary='Go to Telegram Bot (Under Dev)' />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <SendIcon />
+            </ListItemIcon>
+            <ListItemText primary='Change Password' />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <DraftsIcon />
+            </ListItemIcon>
+            <ListItemText primary='Log-out' />
+          </ListItem>
         </List>
       </Container>
     );
