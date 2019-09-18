@@ -3,11 +3,12 @@ import styled from 'styled-components';
 import MainGrid from './MainGrid';
 import TopBar from './TopBar';
 import UserDropDown from './UserDropDown';
+import AddNewExpenditurePopUp from './AddNewExpenditurePopUp.js';
 import moment from 'moment';
 // import addDays from 'date-fns/addDays';
 
 const MainPageContainer = styled.div`
-  font-family: Georgia, serif;
+  font-family: comfortaa, serif;
 `;
 
 const StyledMainGrid = styled(MainGrid)`
@@ -31,7 +32,8 @@ export default class MainPage extends React.Component {
       userIcon: '',
       currency: 'SGD$',
       totalSum: '9,872',
-      isDropDown: false
+      isDropDown: false,
+      isAddItem: false
       // startDate: new Date(),
       // endDate: addDays(new Date(), -7)
     };
@@ -40,7 +42,7 @@ export default class MainPage extends React.Component {
   componentDidMount = () => {};
 
   parseDateIntoString = date => {
-    return moment(date).format('Do MMM dddd h:mm:ss a');
+    return moment(date).format('Do MMM dddd h:mm a');
   };
   parseSumWithComma = number => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -59,8 +61,23 @@ export default class MainPage extends React.Component {
     console.log(isDropDown);
   };
 
+  handleAddNewItem = () => {
+    const { isAddItem } = this.state;
+    this.setState({
+      isAddItem: !isAddItem
+    });
+    console.log(isAddItem);
+  };
+
   render() {
-    const { dateToday, userName, currency, totalSum, isDropDown } = this.state;
+    const {
+      dateToday,
+      userName,
+      currency,
+      totalSum,
+      isDropDown,
+      isAddItem
+    } = this.state;
     return (
       <MainPageContainer>
         <StyledTopBar
@@ -71,11 +88,16 @@ export default class MainPage extends React.Component {
         {isDropDown && (
           <StyledUserDropDown handleUserDropDown={this.handleUserDropDown} />
         )}
-        <StyledMainGrid
-          totalSum={totalSum}
-          currency={currency}
-          // updateStartEndDates={this.updateStartEndDates}
-        />
+        {!isAddItem && (
+          <StyledMainGrid
+            totalSum={totalSum}
+            currency={currency}
+            handleAddNewItem={this.handleAddNewItem}
+            // updateStartEndDates={this.updateStartEndDates}
+          />
+        )}
+
+        {isAddItem && <AddNewExpenditurePopUp />}
       </MainPageContainer>
     );
   }

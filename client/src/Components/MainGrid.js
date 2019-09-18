@@ -55,11 +55,10 @@ const MainSumText = styled.h1`
   font-weight: 400;
 `;
 
-const BottomFloatingButton = styled(Fab)`
-  position: fixed;
-  bottom: 2%;
+const BottomFloatingButton = styled.div`
+  position: absolute;
+  bottom: 3%;
   right: 3%;
-  cursor: pointer;
 `;
 
 export default class MainGrid extends React.Component {
@@ -96,7 +95,7 @@ export default class MainGrid extends React.Component {
 
   render() {
     const { columns, data } = this.state;
-    const { totalSum, currency, updateStartEndDate } = this.props;
+    const { totalSum, currency, handleAddNewItem } = this.props;
 
     return (
       <Container>
@@ -116,8 +115,10 @@ export default class MainGrid extends React.Component {
           }}
           icons={tableIcons}
         />
-        <BottomFloatingButton size='medium' color='secondary'>
-          <AddIcon />
+        <BottomFloatingButton>
+          <Fab onClick={handleAddNewItem} size='medium' color='default'>
+            <AddIcon />
+          </Fab>
         </BottomFloatingButton>
       </Container>
     );
