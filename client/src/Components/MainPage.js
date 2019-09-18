@@ -2,11 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import MainGrid from './MainGrid';
 import TopBar from './TopBar';
+import UserDropDown from './UserDropDown';
 import moment from 'moment';
-import addDays from 'date-fns/addDays';
+// import addDays from 'date-fns/addDays';
 
 const MainPageContainer = styled.div`
-  font-family: comfortaa;
+  font-family: Georgia, serif;
 `;
 
 const StyledMainGrid = styled(MainGrid)`
@@ -16,6 +17,9 @@ const StyledTopBar = styled(TopBar)`
   height: 50px;
   z-index: 199;
   position: relative;
+`;
+const StyledUserDropDown = styled(UserDropDown)`
+  z-index: 199;
 `;
 
 export default class MainPage extends React.Component {
@@ -27,8 +31,9 @@ export default class MainPage extends React.Component {
       userIcon: '',
       currency: 'SGD$',
       totalSum: '9,872',
-      startDate: new Date(),
-      endDate: addDays(new Date(), -7)
+      isDropDown: false
+      // startDate: new Date(),
+      // endDate: addDays(new Date(), -7)
     };
   }
 
@@ -40,19 +45,37 @@ export default class MainPage extends React.Component {
   parseSumWithComma = number => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
-  updateStartEndDates = (startDate, endDate) => {
+  // updateStartEndDates = (startDate, endDate) => {
+  //   this.setState({
+  //     startDate: startDate,
+  //     endDate: endDate
+  //   });
+  // };
+  handleUserDropDown = () => {
+    const { isDropDown } = this.state;
     this.setState({
-      startDate: startDate,
-      endDate: endDate
+      isDropDown: !isDropDown
     });
+    console.log(isDropDown);
   };
 
   render() {
-    const { dateToday, userName, currency, totalSum } = this.state;
+    const { dateToday, userName, currency, totalSum, isDropDown } = this.state;
     return (
       <MainPageContainer>
-        <StyledTopBar dateToday={dateToday} userName={userName} />
-        <StyledMainGrid totalSum={totalSum} currency={currency} update />
+        <StyledTopBar
+          dateToday={dateToday}
+          userName={userName}
+          handleUserDropDown={this.handleUserDropDown}
+        />
+        {isDropDown && (
+          <StyledUserDropDown handleUserDropDown={this.handleUserDropDown} />
+        )}
+        <StyledMainGrid
+          totalSum={totalSum}
+          currency={currency}
+          // updateStartEndDates={this.updateStartEndDates}
+        />
       </MainPageContainer>
     );
   }

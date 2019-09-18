@@ -18,10 +18,10 @@ export default class UserGroup extends React.Component {
   componentDidMount = () => {};
 
   render() {
-    const { userName } = this.props;
+    const { userName, handleUserDropDown } = this.props;
     return (
       <Container>
-        <Label as='a' image>
+        <Label onClick={handleUserDropDown} as='a' image>
           <img
             src='https://react.semantic-ui.com/images/avatar/small/joe.jpg'
             alt='Profile'

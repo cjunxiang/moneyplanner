@@ -19,11 +19,14 @@ export default class TopBar extends React.Component {
   componentDidMount = () => {};
 
   render() {
-    const { dateToday, userName } = this.props;
+    const { dateToday, userName, handleUserDropDown } = this.props;
     return (
       <Container>
         <TopBarLeft>
-          <UserGroup userName={userName} />
+          <UserGroup
+            handleUserDropDown={handleUserDropDown}
+            userName={userName}
+          />
         </TopBarLeft>
         <TopBarRight>
           <DateGroup dateToday={dateToday} />
