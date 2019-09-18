@@ -20,7 +20,10 @@ const Container = styled.div`
   padding-right: 3%;
   width: 20%;
 `;
-
+//#eceaea
+const StyledList = styled(List)`
+  background: #f9f9f9;
+`;
 export default class UserDropDown extends React.Component {
   constructor(props) {
     super(props);
@@ -42,7 +45,7 @@ export default class UserDropDown extends React.Component {
     const {} = this.props;
     return (
       <Container>
-        <List component='nav'>
+        <StyledList component='nav'>
           <ListItem button onClick={this.handleSetupClick}>
             <ListItemIcon>
               <InboxIcon />
@@ -74,6 +77,12 @@ export default class UserDropDown extends React.Component {
           </ListItem>
           <ListItem button>
             <ListItemIcon>
+              <DraftsIcon />
+            </ListItemIcon>
+            <ListItemText primary='View Analytics (Under Dev)' />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
               <SendIcon />
             </ListItemIcon>
             <ListItemText primary='Change Password' />
@@ -84,7 +93,7 @@ export default class UserDropDown extends React.Component {
             </ListItemIcon>
             <ListItemText primary='Log-out' />
           </ListItem>
-        </List>
+        </StyledList>
       </Container>
     );
   }
