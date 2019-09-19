@@ -2,6 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 import { forwardRef } from 'react';
 import MaterialTable from 'material-table';
+import { DateRangePicker } from 'react-date-range';
 import Fab from '@material-ui/core/Fab';
 import AddBox from '@material-ui/icons/AddBox';
 import AddIcon from '@material-ui/icons/Add';
@@ -19,6 +20,9 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
 
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -48,7 +52,13 @@ const Container = styled.div`
   float: right;
   padding: 5%;
 `;
-
+const DateRangeContainer = styled.div`
+  position: fixed;
+  right: 3%;
+  background: #f2711c;
+  border-radius: 10px;
+  padding: 0.8%;
+`;
 const MainSumText = styled.h1`
   font-family: Georgia, serif;
   font-size: 80px;
@@ -65,6 +75,11 @@ export default class MainGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      selectionRange: {
+        startDate: new Date(),
+        endDate: new Date(),
+        key: 'selection'
+      },
       columns: [
         { title: 'Type', field: 'type' },
         { title: 'Expenditure', field: 'expenditure' },
@@ -93,33 +108,91 @@ export default class MainGrid extends React.Component {
 
   componentDidMount = () => {};
 
+  handleSelectNewDateRange = ranges => {
+    // console.log(ranges.selection.startDate);
+    // console.log(ranges.selection.endDate);
+    this.setState({
+      selectionRange: {
+        startDate: ranges.selection.startDate,
+        endDate: ranges.selection.endDate
+      }
+    });
+  };
+
+  handleConfirmSelectDates = () => {
+    const { updateStartEndDates } = this.props;
+    const { selectionRange } = this.state;
+    this.handleSelectDateRange();
+    updateStartEndDates(selectionRange.startDate, selectionRange.endDate);
+    let displayString =
+      selectionRange.startDate.toString().substring(0, 15) +
+      ' - ' +
+      selectionRange.endDate.toString().substring(0, 15);
+    this.setState({
+      displayString: displayString
+    });
+  };
+
+  handleSelectDateRange = () => {
+    this.setState({
+      isSelectDate: !this.state.isSelectDate
+    });
+  };
+
   render() {
-    const { columns, data } = this.state;
+    const {
+      columns,
+      data,
+      selectionRange,
+      isSelectDate,
+      displayString
+    } = this.state;
     const { totalSum, currency, handleAddNewItem } = this.props;
 
     return (
       <Container>
-        Total Balance
-        <MainSumText>
-          {currency}
-          {totalSum}
-        </MainSumText>
-        <MaterialTable
-          title='Expenditures'
-          columns={columns}
-          data={data}
-          editable={{
-            onRowAdd: newData => {},
-            onRowUpdate: (newData, oldData) => {},
-            onRowDelete: () => {}
-          }}
-          icons={tableIcons}
-        />
-        <BottomFloatingButton>
-          <Fab onClick={handleAddNewItem} size='medium' color='default'>
-            <AddIcon />
-          </Fab>
-        </BottomFloatingButton>
+        {!isSelectDate && (
+          <div>
+            Total Balance
+            <MainSumText>
+              {currency}
+              {totalSum}
+            </MainSumText>
+            <MaterialTable
+              title={displayString}
+              columns={columns}
+              data={data}
+              editable={{
+                onRowAdd: newData => {},
+                onRowUpdate: (newData, oldData) => {},
+                onRowDelete: () => {}
+              }}
+              icons={tableIcons}
+            />
+            <button onClick={this.handleSelectDateRange}>
+              Select Date Range
+            </button>
+            <BottomFloatingButton>
+              <Fab onClick={handleAddNewItem} size='medium' color='default'>
+                <AddIcon />
+              </Fab>
+            </BottomFloatingButton>
+          </div>
+        )}
+
+        {isSelectDate && (
+          <div>
+            <h1>Select Date Range</h1>
+            <DateRangeContainer>
+              <DateRangePicker
+                ranges={[selectionRange]}
+                onChange={this.handleSelectNewDateRange}
+              />
+              <br />
+              <button onClick={this.handleConfirmSelectDates}>confirm</button>
+            </DateRangeContainer>
+          </div>
+        )}
       </Container>
     );
   }

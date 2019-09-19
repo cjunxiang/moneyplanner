@@ -5,7 +5,7 @@ import TopBar from './TopBar';
 import UserDropDown from './UserDropDown';
 import AddNewExpenditurePopUp from './AddNewExpenditurePopUp.js';
 import moment from 'moment';
-// import addDays from 'date-fns/addDays';
+import addDays from 'date-fns/addDays';
 
 const MainPageContainer = styled.div`
   font-family: comfortaa, serif;
@@ -19,6 +19,7 @@ const StyledTopBar = styled(TopBar)`
   z-index: 199;
   position: relative;
 `;
+
 const StyledUserDropDown = styled(UserDropDown)`
   z-index: 199;
 `;
@@ -33,9 +34,9 @@ export default class MainPage extends React.Component {
       currency: 'SGD$',
       totalSum: '9,872',
       isDropDown: false,
-      isAddItem: false
-      // startDate: new Date(),
-      // endDate: addDays(new Date(), -7)
+      isAddItem: false,
+      startDate: new Date(),
+      endDate: addDays(new Date(), -7)
     };
   }
 
@@ -47,12 +48,13 @@ export default class MainPage extends React.Component {
   parseSumWithComma = number => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
   };
-  // updateStartEndDates = (startDate, endDate) => {
-  //   this.setState({
-  //     startDate: startDate,
-  //     endDate: endDate
-  //   });
-  // };
+  updateStartEndDates = (startDate, endDate) => {
+    this.setState({
+      startDate: startDate,
+      endDate: endDate
+    });
+    console.log(startDate);
+  };
   handleUserDropDown = () => {
     const { isDropDown } = this.state;
     this.setState({
@@ -93,7 +95,7 @@ export default class MainPage extends React.Component {
             totalSum={totalSum}
             currency={currency}
             handleAddNewItem={this.handleAddNewItem}
-            // updateStartEndDates={this.updateStartEndDates}
+            updateStartEndDates={this.updateStartEndDates}
           />
         )}
 
