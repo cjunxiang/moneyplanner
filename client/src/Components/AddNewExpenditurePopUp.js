@@ -23,7 +23,7 @@ export default class AddNewExpenditurePopUp extends React.Component {
   componentDidMount = () => {};
 
   render() {
-    const {} = this.props;
+    const { handleAddNewItem } = this.props;
     return (
       <Container>
         <Card>
@@ -42,7 +42,9 @@ export default class AddNewExpenditurePopUp extends React.Component {
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size='small'>Learn More</Button>
+            <Button onClick={handleAddNewItem} size='small'>
+              Learn More
+            </Button>
           </CardActions>
         </Card>
       </Container>

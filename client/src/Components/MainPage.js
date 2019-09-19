@@ -34,6 +34,8 @@ const ShadeOver = styled.div`
   background: #123456;
   position: absolute;
   opacity: 0.2;
+  transition-timing-function: ease-in-out;
+  transition-duration: 2s;
 `;
 
 export default class MainPage extends React.Component {
@@ -110,7 +112,7 @@ export default class MainPage extends React.Component {
         />
         {isAddItem && (
           <div>
-            <AddNewExpenditurePopUp />
+            <AddNewExpenditurePopUp handleAddNewItem={this.handleAddNewItem} />
             <ShadeOver />
           </div>
         )}
