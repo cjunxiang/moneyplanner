@@ -13,15 +13,27 @@ const MainPageContainer = styled.div`
 
 const StyledMainGrid = styled(MainGrid)`
   padding-top: 5%;
+  position: absolute;
+  top: 50px;
 `;
 const StyledTopBar = styled(TopBar)`
   height: 50px;
-  z-index: 199;
-  position: relative;
+  z-index: 198;
+  position: absolute;
 `;
 
 const StyledUserDropDown = styled(UserDropDown)`
   z-index: 199;
+`;
+
+const ShadeOver = styled.div`
+  z-index: 200;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  background: #123456;
+  position: absolute;
+  opacity: 0.2;
 `;
 
 export default class MainPage extends React.Component {
@@ -90,16 +102,18 @@ export default class MainPage extends React.Component {
         {isDropDown && (
           <StyledUserDropDown handleUserDropDown={this.handleUserDropDown} />
         )}
-        {!isAddItem && (
-          <StyledMainGrid
-            totalSum={totalSum}
-            currency={currency}
-            handleAddNewItem={this.handleAddNewItem}
-            updateStartEndDates={this.updateStartEndDates}
-          />
+        <StyledMainGrid
+          totalSum={totalSum}
+          currency={currency}
+          handleAddNewItem={this.handleAddNewItem}
+          updateStartEndDates={this.updateStartEndDates}
+        />
+        {isAddItem && (
+          <div>
+            <AddNewExpenditurePopUp />
+            <ShadeOver />
+          </div>
         )}
-
-        {isAddItem && <AddNewExpenditurePopUp />}
       </MainPageContainer>
     );
   }
