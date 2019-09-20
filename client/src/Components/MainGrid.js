@@ -53,9 +53,11 @@ const Container = styled.div`
   padding: 5%;
 `;
 const DateRangeContainer = styled.div`
+  z-index: 201;
   position: fixed;
   right: 3%;
-  background: #f2711c;
+  top: 20%;
+  background: #f9f9f9;
   border-radius: 10px;
   padding: 0.8%;
 `;
@@ -63,6 +65,19 @@ const MainSumText = styled.h1`
   font-family: Georgia, serif;
   font-size: 80px;
   font-weight: 400;
+`;
+
+const ShadeOver = styled.div`
+  z-index: 200;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: #123456;
+  position: absolute;
+  opacity: 0.5;
+  transition-timing-function: ease-in-out;
+  transition-duration: 2s;
 `;
 
 const BottomFloatingButton = styled.div`
@@ -151,39 +166,39 @@ export default class MainGrid extends React.Component {
 
     return (
       <Container>
-        {!isSelectDate && (
-          <div>
-            Total Balance
-            <MainSumText>
-              {currency}
-              {totalSum}
-            </MainSumText>
-            <MaterialTable
-              title={displayString}
-              columns={columns}
-              data={data}
-              editable={{
-                onRowAdd: newData => {},
-                onRowUpdate: (newData, oldData) => {},
-                onRowDelete: () => {}
-              }}
-              icons={tableIcons}
-            />
-            <button onClick={this.handleSelectDateRange}>
-              Select Date Range
-            </button>
-            <BottomFloatingButton>
-              <Fab onClick={handleAddNewItem} size='medium' color='default'>
-                <AddIcon />
-              </Fab>
-            </BottomFloatingButton>
-          </div>
-        )}
+        <div>
+          Total Balance
+          <MainSumText>
+            {currency}
+            {totalSum}
+          </MainSumText>
+          <MaterialTable
+            title={displayString}
+            columns={columns}
+            data={data}
+            editable={{
+              onRowAdd: newData => {},
+              onRowUpdate: (newData, oldData) => {},
+              onRowDelete: () => {}
+            }}
+            icons={tableIcons}
+          />
+          <button onClick={this.handleSelectDateRange}>
+            Select Date Range
+          </button>
+          <BottomFloatingButton>
+            <Fab onClick={handleAddNewItem} size='medium' color='default'>
+              <AddIcon />
+            </Fab>
+          </BottomFloatingButton>
+        </div>
 
         {isSelectDate && (
           <div>
-            <h1>Select Date Range</h1>
+            <ShadeOver />
             <DateRangeContainer>
+              <strong>Select Date Range</strong>
+              <br />
               <DateRangePicker
                 ranges={[selectionRange]}
                 onChange={this.handleSelectNewDateRange}

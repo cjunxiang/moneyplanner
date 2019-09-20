@@ -23,6 +23,7 @@ const Container = styled.div`
 //#eceaea
 const StyledList = styled(List)`
   background: #f9f9f9;
+  border-radius: 10px;
 `;
 export default class UserDropDown extends React.Component {
   constructor(props) {

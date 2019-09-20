@@ -33,7 +33,7 @@ const ShadeOver = styled.div`
   top: 0;
   background: #123456;
   position: absolute;
-  opacity: 0.2;
+  opacity: 0.5;
   transition-timing-function: ease-in-out;
   transition-duration: 2s;
 `;
@@ -82,7 +82,6 @@ export default class MainPage extends React.Component {
     this.setState({
       isAddItem: !isAddItem
     });
-    console.log(isAddItem);
   };
 
   render() {

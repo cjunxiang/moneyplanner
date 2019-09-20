@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import UserGroup from './Subcomponents/UserGroup';
-import DateGroup from './Subcomponents/DateGroup';
+
 const Container = styled.div`
   height: 50px;
   display: grid;
@@ -19,7 +19,7 @@ export default class TopBar extends React.Component {
   componentDidMount = () => {};
 
   render() {
-    const { dateToday, userName, handleUserDropDown } = this.props;
+    const { userName, handleUserDropDown } = this.props;
     return (
       <Container>
         <TopBarLeft>
@@ -28,9 +28,7 @@ export default class TopBar extends React.Component {
             userName={userName}
           />
         </TopBarLeft>
-        <TopBarRight>
-          <DateGroup dateToday={dateToday} />
-        </TopBarRight>
+        <TopBarRight></TopBarRight>
       </Container>
     );
   }
