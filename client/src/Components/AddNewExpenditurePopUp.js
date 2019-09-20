@@ -71,6 +71,27 @@ export default class AddNewExpenditurePopUp extends React.Component {
     });
   };
 
+  handleSubmitExpenditure = () => {
+    const { type, name, amount, date, remarks } = this.state;
+    let newExp = { type, name, amount, date, remarks };
+    this.handleAddNewItem();
+    //TODO: do call to RESTful API
+    return newExp;
+  };
+  // handleSubmitIncome = () => {
+  //   const { type, name, amount, date, remarks } = this.state;
+  //   let newIncome = {
+  //     type,
+  //     name,
+  //     amount,
+  //     date,
+  //     remarks
+  //   };
+  //   this.handleAddNewItem();
+  //   //TODO: do call to RESTful API
+  //   return newExp;
+  // };
+
   render() {
     const { isMoneyIn, type, name, amount, date, remarks } = this.state;
     return (
@@ -148,7 +169,7 @@ export default class AddNewExpenditurePopUp extends React.Component {
           </CardContent>
 
           <CardActions>
-            <Button onClick={this.handleAddNewItem} size='small'>
+            <Button onClick={this.handleSubmitExpenditure} size='small'>
               Confirm
             </Button>
             <Button onClick={this.handleAddNewItem} size='small'>

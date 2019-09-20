@@ -65,6 +65,7 @@ const MainSumText = styled.h1`
   font-family: Georgia, serif;
   font-size: 80px;
   font-weight: 400;
+  cursor: pointer;
 `;
 
 const ShadeOver = styled.div`
@@ -158,6 +159,7 @@ export default class MainGrid extends React.Component {
       isSelectDate: !this.state.isSelectDate
     });
   };
+
   toInt = sum => {
     return sum.replace(/,/g, '');
   };
@@ -217,7 +219,7 @@ export default class MainGrid extends React.Component {
 
         {isSelectDate && (
           <div>
-            <ShadeOver />
+            <ShadeOver onClick={this.handleConfirmSelectDates} />
             <DateRangeContainer>
               <strong>Select Date Range</strong>
               <br />

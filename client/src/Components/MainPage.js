@@ -115,7 +115,7 @@ export default class MainPage extends React.Component {
         {isAddItem && (
           <div>
             <AddNewExpenditurePopUp handleAddNewItem={this.handleAddNewItem} />
-            <ShadeOver />
+            <ShadeOver onClick={this.handleAddNewItem} />
           </div>
         )}
       </MainPageContainer>
