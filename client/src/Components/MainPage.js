@@ -46,7 +46,8 @@ export default class MainPage extends React.Component {
       userName: 'C.Junxiang',
       userIcon: '',
       currency: 'SGD$',
-      totalSum: '9,872',
+      totalSum: '98,720',
+      goalSum: '100,000',
       isDropDown: false,
       isAddItem: false,
       startDate: new Date(),
@@ -91,7 +92,8 @@ export default class MainPage extends React.Component {
       currency,
       totalSum,
       isDropDown,
-      isAddItem
+      isAddItem,
+      goalSum
     } = this.state;
     return (
       <MainPageContainer>
@@ -104,6 +106,7 @@ export default class MainPage extends React.Component {
           <StyledUserDropDown handleUserDropDown={this.handleUserDropDown} />
         )}
         <StyledMainGrid
+          goalSum={goalSum}
           totalSum={totalSum}
           currency={currency}
           handleAddNewItem={this.handleAddNewItem}

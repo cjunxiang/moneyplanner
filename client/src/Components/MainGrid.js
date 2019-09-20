@@ -90,6 +90,7 @@ export default class MainGrid extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      isShowTable: false,
       selectionRange: {
         startDate: new Date(),
         endDate: new Date(),
@@ -147,45 +148,66 @@ export default class MainGrid extends React.Component {
       displayString: displayString
     });
   };
-
+  handleIsShowTable = () => {
+    this.setState({
+      isShowTable: !this.state.isShowTable
+    });
+  };
   handleSelectDateRange = () => {
     this.setState({
       isSelectDate: !this.state.isSelectDate
     });
   };
-
+  toInt = sum => {
+    return sum.replace(/,/g, '');
+  };
+  getSumDifference = () => {
+    const { goalSum, totalSum } = this.props;
+    let diff = this.toInt(goalSum) - this.toInt(totalSum);
+    if (diff >= 0) {
+      return '+' + diff;
+    } else {
+      return '-' + diff;
+    }
+  };
   render() {
     const {
       columns,
       data,
       selectionRange,
       isSelectDate,
+      isShowTable,
       displayString
     } = this.state;
-    const { totalSum, currency, handleAddNewItem } = this.props;
+    const { totalSum, currency, handleAddNewItem, goalSum } = this.props;
 
     return (
       <Container>
         <div>
           Total Balance
-          <MainSumText>
+          <MainSumText onClick={this.handleIsShowTable}>
             {currency}
             {totalSum}
           </MainSumText>
-          <MaterialTable
-            title={displayString}
-            columns={columns}
-            data={data}
-            editable={{
-              onRowAdd: newData => {},
-              onRowUpdate: (newData, oldData) => {},
-              onRowDelete: () => {}
-            }}
-            icons={tableIcons}
-          />
-          <button onClick={this.handleSelectDateRange}>
-            Select Date Range
-          </button>
+          Goal is: {goalSum} ({this.getSumDifference()})
+          {isShowTable && (
+            <div>
+              <MaterialTable
+                title={displayString}
+                columns={columns}
+                data={data}
+                editable={{
+                  onRowAdd: newData => {},
+                  onRowUpdate: (newData, oldData) => {},
+                  onRowDelete: () => {}
+                }}
+                icons={tableIcons}
+              />
+              <button onClick={this.handleSelectDateRange}>
+                Select Date Range
+              </button>
+            </div>
+          )}
           <BottomFloatingButton>
             <Fab onClick={handleAddNewItem} size='medium' color='default'>
               <AddIcon />
