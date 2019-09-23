@@ -87,10 +87,13 @@ const BottomFloatingButton = styled.div`
   right: 3%;
 `;
 
-export default class MainGrid extends React.Component {
+export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      currency: 'SGD$',
+      totalSum: '98,720',
+      goalSum: '100,000',
       isShowTable: false,
       selectionRange: {
         startDate: new Date(),
@@ -163,8 +166,9 @@ export default class MainGrid extends React.Component {
   toInt = sum => {
     return sum.replace(/,/g, '');
   };
+
   getSumDifference = () => {
-    const { goalSum, totalSum } = this.props;
+    const { goalSum, totalSum } = this.state;
     let diff = this.toInt(goalSum) - this.toInt(totalSum);
     if (diff >= 0) {
       return '+' + diff;
@@ -179,9 +183,12 @@ export default class MainGrid extends React.Component {
       selectionRange,
       isSelectDate,
       isShowTable,
-      displayString
+      displayString,
+      totalSum,
+      currency,
+      goalSum
     } = this.state;
-    const { totalSum, currency, handleAddNewItem, goalSum } = this.props;
+    const { handleAddNewItem } = this.props;
 
     return (
       <Container>

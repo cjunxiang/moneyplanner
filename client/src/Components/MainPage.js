@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import MainGrid from './MainGrid';
+import Dashboard from './Dashboard';
 import TopBar from './TopBar';
+import LeftBar from './LeftBar';
 import UserDropDown from './UserDropDown';
 import AddNewExpenditurePopUp from './AddNewExpenditurePopUp.js';
 import moment from 'moment';
@@ -10,8 +11,13 @@ import addDays from 'date-fns/addDays';
 const MainPageContainer = styled.div`
   font-family: comfortaa, serif;
 `;
-
-const StyledMainGrid = styled(MainGrid)`
+const StyledLeftBar = styled(LeftBar)`
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 200;
+`;
+const StyledDashboard = styled(Dashboard)`
   padding-top: 5%;
   position: absolute;
   top: 50px;
@@ -42,14 +48,11 @@ export default class MainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      dateToday: this.parseDateIntoString(new Date()),
       userName: 'C.Junxiang',
       userIcon: '',
-      currency: 'SGD$',
-      totalSum: '98,720',
-      goalSum: '100,000',
       isDropDown: false,
       isAddItem: false,
+      isLeftBarOpen: false,
       startDate: new Date(),
       endDate: addDays(new Date(), -7)
     };
@@ -70,6 +73,7 @@ export default class MainPage extends React.Component {
     });
     console.log(startDate);
   };
+
   handleUserDropDown = () => {
     const { isDropDown } = this.state;
     this.setState({
@@ -85,30 +89,31 @@ export default class MainPage extends React.Component {
     });
   };
 
+  handleDrawerOpen = () => {
+    this.setState({
+      isLeftBarOpen: !this.state.isLeftBarOpen
+    });
+  };
+
   render() {
-    const {
-      dateToday,
-      userName,
-      currency,
-      totalSum,
-      isDropDown,
-      isAddItem,
-      goalSum
-    } = this.state;
+    const { userName, isDropDown, isAddItem, isLeftBarOpen } = this.state;
     return (
       <MainPageContainer>
         <StyledTopBar
-          dateToday={dateToday}
           userName={userName}
           handleUserDropDown={this.handleUserDropDown}
+          handleDrawerOpen={this.handleDrawerOpen}
         />
         {isDropDown && (
           <StyledUserDropDown handleUserDropDown={this.handleUserDropDown} />
         )}
-        <StyledMainGrid
-          goalSum={goalSum}
-          totalSum={totalSum}
-          currency={currency}
+        {isLeftBarOpen && (
+          <StyledLeftBar
+            isLeftBarOpen={isLeftBarOpen}
+            handleDrawerOpen={this.handleDrawerOpen}
+          />
+        )}
+        <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
           updateStartEndDates={this.updateStartEndDates}
         />

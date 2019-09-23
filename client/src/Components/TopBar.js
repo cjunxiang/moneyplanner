@@ -17,13 +17,16 @@ export default class TopBar extends React.Component {
   }
 
   componentDidMount = () => {};
-
+  handleDrawerOpen = () => {
+    this.props.handleDrawerOpen();
+  };
   render() {
     const { userName, handleUserDropDown } = this.props;
     return (
       <Container>
         <TopBarLeft>
           <UserGroup
+            handleDrawerOpen={this.handleDrawerOpen}
             handleUserDropDown={handleUserDropDown}
             userName={userName}
           />
