@@ -21,7 +21,8 @@
     "@material-ui/icons": "^4.4.1",
     "express": "^4.17.1",
     "material-table": "^1.50.0",
-    "material-ui-icons": "^1.0.0-beta.36"
+    "material-ui-icons": "^1.0.0-beta.36",
+    "winston": "^3.2.1"
   },
   "devDependencies": {},
   "description": ""
