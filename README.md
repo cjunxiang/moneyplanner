@@ -20,6 +20,9 @@ Access localhost/3000
 
 ## Overview of App
 . Multi-wallet money-management application that does not require any downloading
+
 . Simplistic, simple with all essential features, intended for students or anyone with only a few wallets
+
 . Telegram Bot Integration (In Dev)
+
 . Analytics for Money spending (In Dev)
