@@ -26,3 +26,15 @@ Access localhost/3000
 . Telegram Bot Integration (In Dev)
 
 . Analytics for Money spending (In Dev)
+
+## Learning Outcome
+. MERN Stack
+(MongoDB > Express > React > Node)
+
+. CI/CD using travis/jenkins
+
+. Testing with Mocha & Chai (For front-end/back-end)
+
+. NLP with Google's Dialogflow
+
+. Data Analysis of Spending and Data Visualisation
