@@ -20,6 +20,8 @@ import Remove from '@material-ui/icons/Remove';
 import SaveAlt from '@material-ui/icons/SaveAlt';
 import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
+import VisibilityIcon from '@material-ui/icons/Visibility';
+import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
 
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -68,6 +70,16 @@ const MainSumText = styled.h1`
   cursor: pointer;
 `;
 
+const StyledVisibilityOffIcon = styled(VisibilityOffIcon)`
+  width: 50px !important;
+  height: 50px !important;
+`;
+
+const StyledVisibilityIcon = styled(VisibilityIcon)`
+  width: 50px !important;
+  height: 50px !important;
+`;
+
 const ShadeOver = styled.div`
   z-index: 200;
   width: 100%;
@@ -94,6 +106,7 @@ export default class Dashboard extends React.Component {
       currency: 'SGD$',
       totalSum: '98,720',
       goalSum: '100,000',
+      isShowSum: true,
       isShowTable: false,
       selectionRange: {
         startDate: new Date(),
@@ -162,6 +175,11 @@ export default class Dashboard extends React.Component {
       isSelectDate: !this.state.isSelectDate
     });
   };
+  handleIsShowSum = () => {
+    this.setState({
+      isShowSum: !this.state.isShowSum
+    });
+  };
 
   toInt = sum => {
     return sum.replace(/,/g, '');
@@ -186,7 +204,8 @@ export default class Dashboard extends React.Component {
       displayString,
       totalSum,
       currency,
-      goalSum
+      goalSum,
+      isShowSum
     } = this.state;
     const { handleAddNewItem } = this.props;
 
@@ -194,11 +213,27 @@ export default class Dashboard extends React.Component {
       <Container>
         <div>
           Total Balance
-          <MainSumText onClick={this.handleIsShowTable}>
-            {currency}
-            {totalSum}
-          </MainSumText>
-          Goal is: {goalSum} ({this.getSumDifference()})
+          {isShowSum && (
+            <div>
+              <StyledVisibilityIcon onClick={this.handleIsShowSum} />
+              <MainSumText>
+                <p onClick={this.handleIsShowTable}>
+                  {currency}
+                  {totalSum}
+                </p>
+              </MainSumText>
+              Goal is: {goalSum} ({this.getSumDifference()}){' '}
+            </div>
+          )}
+          {!isShowSum && (
+            <div>
+              <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
+              <MainSumText>
+                <p onClick={this.handleIsShowTable}>{currency} &nbsp;******</p>
+              </MainSumText>
+              Goal is: {goalSum} ({this.getSumDifference()}){' '}
+            </div>
+          )}
           {isShowTable && (
             <div>
               <MaterialTable
