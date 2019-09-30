@@ -268,6 +268,7 @@ export default class Dashboard extends React.Component {
               <DateRangePicker
                 ranges={[selectionRange]}
                 onChange={this.handleSelectNewDateRange}
+                maxDate={new Date()}
               />
               <br />
               <button onClick={this.handleConfirmSelectDates}>confirm</button>
