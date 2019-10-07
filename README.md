@@ -15,7 +15,11 @@ Windows developers are highly recommended to use Npm `6.4.1` or later.
 
 ## Running
 ```cd ./BackEnd && npm install && node server.js```
+
+
 ```cd ./client/ && npm install && npm start ```
+
+
 Access localhost:3000 
 
 ## Overview of App
