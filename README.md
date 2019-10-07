@@ -14,9 +14,9 @@ Windows developers are highly recommended to use Npm `6.4.1` or later.
 . *Visual Studio Code* IDE (Recommended)
 
 ## Running
-cd ./BackEnd && npm install && node server.js
-cd ./client/ && npm install && npm start 
-Access localhost/3000 
+```cd ./BackEnd && npm install && node server.js```
+```cd ./client/ && npm install && npm start ```
+Access localhost:3000 
 
 ## Overview of App
 . Multi-wallet money-management application that does not require any downloading
