@@ -346,7 +346,7 @@ module.exports = {
   fetchWalletByWalletId,
   editWalletByWalletId,
   deleteWalletByWalletId,
-  getWalletIdByWalletNameAndUserId,
+  // getWalletIdByWalletNameAndUserId,
   //below is for Events
   fetchEventListByWalletId,
   addEventByWalletId,

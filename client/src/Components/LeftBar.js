@@ -72,12 +72,13 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default class TopBar extends React.Component {
+export default class LeftBar extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      classes: useStyles(),
-      theme: useTheme()
+      classes: useStyles,
+      theme: useTheme,
+      wallets: ['Wallet 1', 'Wallet 2', 'Wallet 3', 'Wallet 4']
     };
   }
 
@@ -85,7 +86,7 @@ export default class TopBar extends React.Component {
 
   render() {
     const { isLeftBarOpen, handleDrawerOpen } = this.props;
-    const { classes, theme } = this.state;
+    const { wallets, classes, theme } = this.state;
     return (
       <Drawer
         className={classes.drawer}
@@ -107,7 +108,7 @@ export default class TopBar extends React.Component {
         </div>
         <Divider />
         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
+          {wallets.map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>
                 {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
@@ -117,16 +118,6 @@ export default class TopBar extends React.Component {
           ))}
         </List>
         <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
       </Drawer>
     );
   }
