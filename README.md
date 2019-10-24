@@ -15,10 +15,11 @@ Windows developers are highly recommended to use Npm `6.4.1` or later.
 
 ## Running
 ```cd ./BackEnd && npm install && node server.js```
-
-
 ```cd ./client/ && npm install && npm start ```
 
+OR 
+at root folder:
+npm run startall
 
 Access localhost:3000 
 
@@ -31,14 +32,22 @@ Access localhost:3000
 
 . Analytics for Money spending (In Dev)
 
+## Stack
+MERN
+MongoDB > Express.js > React.js > Node.js
+
+MongoDB - Database hosted on MongoDB Atlas
+App hosted on Heroku (TBC)
+
+Database Schema: (TBC)
+
 ## Learning Outcome
 . MERN Stack
-(MongoDB > Express > React > Node)
 
 . CI/CD using travis/jenkins
 
-. Testing with Mocha & Chai (For front-end/back-end)
+. Testing with Mocha & Chai, Cypress (For front-end/back-end)
 
-. NLP with Google's Dialogflow
+. Integrating NLP with Google's Dialogflow
 
 . Data Analysis of Spending and Data Visualisation
