@@ -4,7 +4,11 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node server.js",
+    "start:all": "concurrently \"cd client && npm start\" \"cd BackEnd/ && nodemon server.js\" \"mongo && use moneyplanner\" ",
+    "start:front": "cd client && react-scripts start",
+    "start:back": "cd BackEnd/ && nodemon server.js",
+    "start:db": "mongo && use moneyplanner"
   },
   "repository": {
     "type": "git",
@@ -19,9 +23,13 @@
   "dependencies": {
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.0.0",
+    "cors": "^2.8.5",
     "express": "^4.17.1",
     "material-table": "^1.50.0",
     "material-ui-icons": "^1.0.0-beta.36",
+    "mongoose": "^5.7.5",
     "winston": "^3.2.1"
   },
   "devDependencies": {},
