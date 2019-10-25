@@ -16,12 +16,12 @@ Windows developers are highly recommended to use Npm `6.4.1` or later.
 ## Running
 ```cd ./BackEnd && npm install && node server.js```
 ```cd ./client/ && npm install && npm start ```
+```mongo && use moneyplanner```
+```Access localhost:3000```
 
 OR 
 at root folder:
-npm run startall
-
-Access localhost:3000 
+```npm run startall```
 
 ## Overview of App
 . Multi-wallet money-management application that does not require any downloading
@@ -38,6 +38,11 @@ MongoDB > Express.js > React.js > Node.js
 
 MongoDB - Database hosted on MongoDB Atlas
 App hosted on Heroku (TBC)
+
+. Front end components heavily based on material-ui
+. Make http requests from node.js through Axios 
+. Testing through mocha and chai
+. Front-end-to-end testing through Cypress
 
 Database Schema: (TBC)
 
