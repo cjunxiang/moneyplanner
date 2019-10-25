@@ -40,8 +40,11 @@ MongoDB - Database hosted on MongoDB Atlas
 App hosted on Heroku (TBC)
 
 . Front end components heavily based on material-ui
+
 . Make http requests from node.js through Axios 
+
 . Testing through mocha and chai
+
 . Front-end-to-end testing through Cypress
 
 Database Schema: (TBC)
