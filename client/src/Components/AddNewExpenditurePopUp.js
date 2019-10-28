@@ -10,6 +10,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import IncomeForm from './Subcomponents/IncomeForm';
 import ExpenditureForm from './Subcomponents/ExpenditureForm';
+import CloseButton from './Reusable/CloseButton';
 
 const Container = styled.div`
   z-index: 201;
@@ -17,6 +18,12 @@ const Container = styled.div`
   top: 20%;
   left: 25%;
   width: 50%;
+`;
+const StyledCloseButton = styled(CloseButton)`
+  right: 0;
+`;
+const CloseButtonContainer = styled.div`
+  padding: 2px;
 `;
 
 export default class AddNewExpenditurePopUp extends React.Component {
@@ -43,6 +50,7 @@ export default class AddNewExpenditurePopUp extends React.Component {
   handleAddNewItem = () => {
     const { handleAddNewItem } = this.props;
     handleAddNewItem();
+    console.log('exitting pop-up');
   };
 
   handleTypeChange = newInput => {
@@ -78,25 +86,15 @@ export default class AddNewExpenditurePopUp extends React.Component {
     //TODO: do call to RESTful API
     return newExp;
   };
-  // handleSubmitIncome = () => {
-  //   const { type, name, amount, date, remarks } = this.state;
-  //   let newIncome = {
-  //     type,
-  //     name,
-  //     amount,
-  //     date,
-  //     remarks
-  //   };
-  //   this.handleAddNewItem();
-  //   //TODO: do call to RESTful API
-  //   return newExp;
-  // };
 
   render() {
     const { isMoneyIn, type, name, amount, date, remarks } = this.state;
     return (
       <Container>
         <Card>
+          <CloseButtonContainer onClick={this.handleAddNewItem}>
+            <StyledCloseButton />
+          </CloseButtonContainer>
           <CardContent>
             <Grid item>
               <Grid item>
