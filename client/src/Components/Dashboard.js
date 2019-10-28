@@ -22,6 +22,7 @@ import Search from '@material-ui/icons/Search';
 import ViewColumn from '@material-ui/icons/ViewColumn';
 import VisibilityIcon from '@material-ui/icons/Visibility';
 import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
+import Loading from './Reusable/Loading';
 
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -49,7 +50,11 @@ const tableIcons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
-
+const StyledLoadingCircle = styled(Loading)`
+  position: absolute;
+  top: 38%;
+  left: 50%;
+`;
 const Container = styled.div`
   float: right;
   padding: 5%;
@@ -98,7 +103,7 @@ const BottomFloatingButton = styled.div`
   bottom: 3%;
   right: 3%;
 `;
-
+const request = require('request');
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -108,38 +113,49 @@ export default class Dashboard extends React.Component {
       goalSum: '100,000',
       isShowSum: true,
       isShowTable: false,
+      isFetchingData: true,
       selectionRange: {
         startDate: new Date(),
         endDate: new Date(),
         key: 'selection'
       },
       columns: [
-        { title: 'Type', field: 'type' },
-        { title: 'Expenditure', field: 'expenditure' },
-        { title: 'Amount', field: 'amount', type: 'numeric' },
-        { title: 'Date', field: 'date' },
-        { title: 'Remarks', field: 'remarks' }
-      ],
-      data: [
-        {
-          type: 'Food',
-          expenditure: 'Bak Kut Teh',
-          amount: 5.0,
-          date: '18-Sep-2019',
-          remarks: '-'
-        },
-        {
-          type: 'Transport',
-          expenditure: 'MRT ',
-          amount: 1.72,
-          date: '17-Sep-2019',
-          remarks: 'Top up at Clementi MRT'
-        }
+        { title: 'Type', field: 'Type' },
+        { title: 'Expenditure', field: 'Name' },
+        { title: 'Amount', field: 'Price', type: 'numeric' },
+        { title: 'Date', field: 'Date' },
+        { title: 'Remarks', field: 'Remarks' }
       ]
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    //this.getTargetSum();
+    this.fetchAllData();
+  };
+
+  fetchAllData = () => {
+    request.post(
+      'http://localhost:4000/api/event/fetchAllEvents',
+      {},
+      (error, res, body) => {
+        if (error) {
+          console.log(`Error ${error}`);
+        }
+        let dataObject = JSON.parse(res.body);
+        let sum = 0;
+        for (const event of dataObject) {
+          sum += event.Price;
+        }
+        let sumString = sum.toString();
+        this.setState({
+          data: dataObject,
+          totalSum: sumString,
+          isFetchingData: false
+        });
+      }
+    );
+  };
 
   handleSelectNewDateRange = ranges => {
     // console.log(ranges.selection.startDate);
@@ -165,16 +181,19 @@ export default class Dashboard extends React.Component {
       displayString: displayString
     });
   };
+
   handleIsShowTable = () => {
     this.setState({
       isShowTable: !this.state.isShowTable
     });
   };
+
   handleSelectDateRange = () => {
     this.setState({
       isSelectDate: !this.state.isSelectDate
     });
   };
+
   handleIsShowSum = () => {
     this.setState({
       isShowSum: !this.state.isShowSum
@@ -194,6 +213,7 @@ export default class Dashboard extends React.Component {
       return '-' + diff;
     }
   };
+
   render() {
     const {
       columns,
@@ -205,74 +225,84 @@ export default class Dashboard extends React.Component {
       totalSum,
       currency,
       goalSum,
-      isShowSum
+      isShowSum,
+      isFetchingData
     } = this.state;
     const { handleAddNewItem } = this.props;
 
     return (
       <Container>
-        <div>
-          Total Balance
-          {isShowSum && (
-            <div>
-              <StyledVisibilityIcon onClick={this.handleIsShowSum} />
-              <MainSumText>
-                <p onClick={this.handleIsShowTable}>
-                  {currency}
-                  {totalSum}
-                </p>
-              </MainSumText>
-              Goal is: {goalSum} ({this.getSumDifference()}){' '}
-            </div>
-          )}
-          {!isShowSum && (
-            <div>
-              <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
-              <MainSumText>
-                <p onClick={this.handleIsShowTable}>{currency} &nbsp;******</p>
-              </MainSumText>
-              Goal is: {goalSum} ({this.getSumDifference()}){' '}
-            </div>
-          )}
-          {isShowTable && (
-            <div>
-              <MaterialTable
-                title={displayString}
-                columns={columns}
-                data={data}
-                editable={{
-                  onRowAdd: newData => {},
-                  onRowUpdate: (newData, oldData) => {},
-                  onRowDelete: () => {}
-                }}
-                icons={tableIcons}
-              />
-              <button onClick={this.handleSelectDateRange}>
-                Select Date Range
-              </button>
-            </div>
-          )}
-          <BottomFloatingButton>
-            <Fab onClick={handleAddNewItem} size='medium' color='default'>
-              <AddIcon />
-            </Fab>
-          </BottomFloatingButton>
-        </div>
-
-        {isSelectDate && (
+        {isFetchingData && <StyledLoadingCircle />}
+        {!isFetchingData && (
           <div>
-            <ShadeOver onClick={this.handleConfirmSelectDates} />
-            <DateRangeContainer>
-              <strong>Select Date Range</strong>
-              <br />
-              <DateRangePicker
-                ranges={[selectionRange]}
-                onChange={this.handleSelectNewDateRange}
-                maxDate={new Date()}
-              />
-              <br />
-              <button onClick={this.handleConfirmSelectDates}>confirm</button>
-            </DateRangeContainer>
+            <div>
+              Total Balance
+              {isShowSum && (
+                <div>
+                  <StyledVisibilityIcon onClick={this.handleIsShowSum} />
+                  <MainSumText>
+                    <p onClick={this.handleIsShowTable}>
+                      {currency}
+                      {totalSum}
+                    </p>
+                  </MainSumText>
+                  Goal is: {goalSum} ({this.getSumDifference()}){' '}
+                </div>
+              )}
+              {!isShowSum && (
+                <div>
+                  <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
+                  <MainSumText>
+                    <p onClick={this.handleIsShowTable}>
+                      {currency} &nbsp;******
+                    </p>
+                  </MainSumText>
+                  Goal is: {goalSum} ({this.getSumDifference()}){' '}
+                </div>
+              )}
+              {isShowTable && (
+                <div>
+                  <MaterialTable
+                    title={displayString}
+                    columns={columns}
+                    data={data}
+                    editable={{
+                      onRowAdd: newData => {},
+                      onRowUpdate: (newData, oldData) => {},
+                      onRowDelete: () => {}
+                    }}
+                    icons={tableIcons}
+                  />
+                  <button onClick={this.handleSelectDateRange}>
+                    Select Date Range
+                  </button>
+                </div>
+              )}
+              <BottomFloatingButton>
+                <Fab onClick={handleAddNewItem} size='medium' color='default'>
+                  <AddIcon />
+                </Fab>
+              </BottomFloatingButton>
+            </div>
+
+            {isSelectDate && (
+              <div>
+                <ShadeOver onClick={this.handleConfirmSelectDates} />
+                <DateRangeContainer>
+                  <strong>Select Date Range</strong>
+                  <br />
+                  <DateRangePicker
+                    ranges={[selectionRange]}
+                    onChange={this.handleSelectNewDateRange}
+                    maxDate={new Date()}
+                  />
+                  <br />
+                  <button onClick={this.handleConfirmSelectDates}>
+                    confirm
+                  </button>
+                </DateRangeContainer>
+              </div>
+            )}
           </div>
         )}
       </Container>
