@@ -28,20 +28,18 @@ const fetchAllWallets = async (req, res) => {
   });
 };
 
-const fetchAllWalletsByWalletId = async (req, res) => {
-  logger.debug('fetchAllWalletsByWalletId method started.');
-  console.log(req.body);
-  WalletDb.findById(req.params.id, function(err, todo) {
-    res.json(todo);
+const fetchWalletByWalletId = async (req, res) => {
+  logger.debug('fetchWalletByWalletId method started.');
+  WalletDb.findById(req.params.id, function(err, wallet) {
+    res.json(wallet);
   });
 };
 
 //TODO: not done
 const fetchAllWalletsByUserId = async (req, res) => {
   logger.debug('fetchAllWalletsByUserId method started.');
-  console.log(req.body);
-  WalletDb.findById(req.params.id, function(err, todo) {
-    res.json(todo);
+  WalletDb.findById(req.params.id, function(err, wallet) {
+    res.json(wallet);
   });
 };
 
@@ -50,16 +48,16 @@ const editWalletByWalletId = async (req, res) => {
   WalletDb.findById(req.params.id, function(err, updatedWallet) {
     if (!updatedWallet) res.status(404).send('data is not found');
     else {
-      updatedWallet.WalletName = req.body.todo_description;
-      updatedWallet.UserId = req.body.todo_responsible;
-      updatedWallet.TargetSum = req.body.todo_priority;
-      updatedWallet.TotalSum = req.body.todo_completed;
+      updatedWallet.WalletName = req.body.WalletName;
+      updatedWallet.UserId = req.body.UserId;
+      updatedWallet.TargetSum = req.body.TargetSum;
+      updatedWallet.TotalSum = req.body.TotalSum;
       updatedWallet.Currency = req.body.Currency;
       updatedWallet.Active = req.body.Active;
     }
     updatedWallet
       .save()
-      .then(todo => {
+      .then(updatedWallet => {
         res.json('updatedWallet editted!');
       })
       .catch(err => {
@@ -81,7 +79,7 @@ const deleteWalletByWalletId = async (req, res) => {
 module.exports = {
   AddNewWalletToDatabase,
   fetchAllWallets,
-  fetchAllWalletsByWalletId,
+  fetchWalletByWalletId,
   fetchAllWalletsByUserId,
   editWalletByWalletId,
   deleteWalletByWalletId

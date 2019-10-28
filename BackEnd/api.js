@@ -4,21 +4,24 @@ const event = require('./db/event.js');
 const wallet = require('./db/wallet.js');
 
 /**
- * Event Functions
+ * Event database Functions
  */
 router.post('/event/addNewEventToDatabase', event.AddNewEventToDatabase);
 router.post('/event/fetchAllEvents', event.fetchAllEvents);
-// router.post('/event/deleteEvent', event.);
+router.post('/wallet/fetchEventByEventId/:id', event.fetchEventByEventId);
+router.post(
+  '/wallet/fetchAllEventByWalletId/:id',
+  event.fetchAllEventByWalletId
+);
+router.post('/wallet/editEventByEventId/:id', event.editEventByEventId);
+router.post('/wallet/deleteEventByEventId/:id', event.deleteEventByEventId);
 
 /**
- * Wallet Functions
+ * Wallet database Functions
  */
 router.post('/wallet/addNewWalletToDatabase', wallet.AddNewWalletToDatabase);
 router.post('/wallet/fetchAllWallets', wallet.fetchAllWallets);
-router.post(
-  '/wallet/fetchAllWalletsByWalletId/:id',
-  wallet.fetchAllWalletsByWalletId
-);
+router.post('/wallet/fetchWalletByWalletId/:id', wallet.fetchWalletByWalletId);
 router.post(
   '/wallet/fetchAllWalletsByUserId/:id',
   wallet.fetchAllWalletsByUserId

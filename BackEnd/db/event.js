@@ -28,8 +28,55 @@ const fetchAllEvents = async (req, res) => {
     }
   });
 };
+const fetchEventByEventId = async (req, res) => {
+  logger.debug('fetchEventByEventId method started.');
+  EventDB.findById(req.params.id, function(err, event) {
+    res.json(event);
+  });
+};
+
+//TODO: not done, needs filtering;; find efficient method
+const fetchAllEventByWalletId = async (req, res) => {};
+
+const editEventByEventId = async (req, res) => {
+  logger.debug('editEventByEventId method started.');
+  EventDB.findById(req.params.id, function(err, updatedEvent) {
+    if (!updatedEvent) res.status(404).send('data is not found');
+    else {
+      updatedEvent.WalletId = req.body.WalletId;
+      updatedEvent.InflowOrOutFlow = req.body.InflowOrOutFlow;
+      updatedEvent.Type = req.body.Type;
+      updatedEvent.Name = req.body.Name;
+      updatedEvent.Price = req.body.Price;
+      updatedEvent.Date = req.body.Date;
+      updatedEvent.Remarks = req.body.Remarks;
+    }
+    updatedEvent
+      .save()
+      .then(updatedEvent => {
+        res.json('updatedEvent editted!');
+      })
+      .catch(err => {
+        res.status(400).send('Event update not possible');
+      });
+  });
+};
+
+const deleteEventByEventId = async (req, res) => {
+  logger.debug('deleteEventByEventId method started.');
+  EventDB.findByIdAndRemove(req.params.id, function(err, event) {
+    if (!event) res.status(404).send('data is not found');
+    else {
+      res.json('wallet deleted!');
+    }
+  });
+};
 
 module.exports = {
   AddNewEventToDatabase,
-  fetchAllEvents
+  fetchAllEvents,
+  fetchEventByEventId,
+  fetchAllEventByWalletId,
+  editEventByEventId,
+  deleteEventByEventId
 };

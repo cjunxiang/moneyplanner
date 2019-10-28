@@ -31,7 +31,8 @@ app.use('/api', apiRouter);
  * Set up mongoDb
  */
 mongoose.connect('mongodb://127.0.0.1:27017/moneyplanner', {
-  useNewUrlParser: true
+  useNewUrlParser: true,
+  useUnifiedTopology: true
 });
 const connection = mongoose.connection;
 connection.once('open', function() {
