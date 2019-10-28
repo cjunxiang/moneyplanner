@@ -2,9 +2,6 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let Event = new Schema({
-  EventName: {
-    type: String
-  },
   WalletId: {
     type: Number
   },

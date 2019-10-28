@@ -6,9 +6,6 @@ let Wallet = new Schema({
   WalletName: {
     type: String
   },
-  WalletId: {
-    type: Number
-  },
   UserId: {
     type: Number
   },

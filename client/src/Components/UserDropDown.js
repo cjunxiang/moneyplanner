@@ -43,15 +43,24 @@ export default class UserDropDown extends React.Component {
   };
   testApi = () => {
     request.post(
-      'http://localhost:4000/api/testroute',
+      'http://localhost:4000/api/event/addNewEventToDatabase',
       {
-        json: { url: this.state.url }
+        json: {
+          WalletId: 12,
+          InflowOrOutFlow: 0,
+          Type: 'food',
+          Name: 'uber',
+          Price: 13,
+          Date: '05-05-2010',
+          Remarks: 'remarks'
+        }
       },
       (error, res, body) => {
         if (error) {
           console.log(`Error ${error}`);
         }
-        console.log('yes');
+        console.log('frontend: ');
+        console.log(res.body);
       }
     );
   };
@@ -107,7 +116,13 @@ export default class UserDropDown extends React.Component {
             <ListItemIcon>
               <DraftsIcon />
             </ListItemIcon>
-            <ListItemText onClick={this.testApi} primary='Log-out' />
+            <ListItemText primary='Log-out' />
+          </ListItem>
+          <ListItem button>
+            <ListItemIcon>
+              <DraftsIcon />
+            </ListItemIcon>
+            <ListItemText onClick={this.testApi} primary='Test-Api' />
           </ListItem>
         </StyledList>
       </Container>
