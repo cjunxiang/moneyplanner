@@ -15,9 +15,13 @@ Windows developers are highly recommended to use Npm `6.4.1` or later.
 
 ## Running
 ```cd ./BackEnd && npm install && node server.js```
+
 ```cd ./client/ && npm install && npm start ```
+
 ```mongo && use moneyplanner```
+
 ```Access localhost:3000```
+
 
 OR 
 at root folder:
@@ -36,7 +40,7 @@ at root folder:
 MERN
 MongoDB > Express.js > React.js > Node.js
 
-MongoDB - Database hosted on MongoDB Atlas
+MongoDB - Database hosted on MongoDB Atlas (non-relation database)
 App hosted on Heroku (TBC)
 
 . Front end components heavily based on material-ui
