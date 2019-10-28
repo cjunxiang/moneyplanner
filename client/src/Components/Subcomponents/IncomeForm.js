@@ -13,6 +13,10 @@ export default class IncomeForm extends React.Component {
 
   render() {
     const {} = this.props;
-    return <Container>lai lai lai</Container>;
+    return (
+      <Container>
+        <p>lai lai lai</p>
+      </Container>
+    );
   }
 }
