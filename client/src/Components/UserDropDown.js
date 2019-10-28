@@ -11,6 +11,7 @@ import SendIcon from '@material-ui/icons/Send';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
 import StarBorder from '@material-ui/icons/StarBorder';
+const request = require('request');
 
 const Container = styled.div`
   z-index: 199;
@@ -39,6 +40,20 @@ export default class UserDropDown extends React.Component {
     this.setState({
       openSetup: !this.state.openSetup
     });
+  };
+  testApi = () => {
+    request.post(
+      'http://localhost:4000/api/testroute',
+      {
+        json: { url: this.state.url }
+      },
+      (error, res, body) => {
+        if (error) {
+          console.log(`Error ${error}`);
+        }
+        console.log('yes');
+      }
+    );
   };
 
   render() {
@@ -92,7 +107,7 @@ export default class UserDropDown extends React.Component {
             <ListItemIcon>
               <DraftsIcon />
             </ListItemIcon>
-            <ListItemText primary='Log-out' />
+            <ListItemText onClick={this.testApi} primary='Log-out' />
           </ListItem>
         </StyledList>
       </Container>

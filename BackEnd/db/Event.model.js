@@ -5,9 +5,6 @@ let Event = new Schema({
   EventName: {
     type: String
   },
-  EventId: {
-    type: Number
-  },
   WalletId: {
     type: Number
   },
@@ -25,6 +22,9 @@ let Event = new Schema({
   },
   Date: {
     type: Date
+  },
+  Remarks: {
+    type: String
   }
 });
 

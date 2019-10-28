@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 let Wallet = new Schema({
+  //Wallet_id
   WalletName: {
     type: String
   },

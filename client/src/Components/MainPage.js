@@ -113,10 +113,10 @@ export default class MainPage extends React.Component {
             handleDrawerOpen={this.handleDrawerOpen}
           />
         )}
-        <StyledDashboard
+        {/* <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
           updateStartEndDates={this.updateStartEndDates}
-        />
+        /> */}
         {isAddItem && (
           <div>
             <AddNewExpenditurePopUp handleAddNewItem={this.handleAddNewItem} />
