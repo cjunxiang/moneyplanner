@@ -11,6 +11,7 @@ import addDays from 'date-fns/addDays';
 const MainPageContainer = styled.div`
   font-family: comfortaa, serif;
 `;
+
 const StyledLeftBar = styled(LeftBar)`
   position: fixed;
   left: 0;
@@ -113,10 +114,10 @@ export default class MainPage extends React.Component {
             handleDrawerOpen={this.handleDrawerOpen}
           />
         )}
-        {/* <StyledDashboard
+        <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
           updateStartEndDates={this.updateStartEndDates}
-        /> */}
+        />
         {isAddItem && (
           <div>
             <AddNewExpenditurePopUp handleAddNewItem={this.handleAddNewItem} />
