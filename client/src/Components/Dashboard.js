@@ -4,29 +4,35 @@ import { forwardRef } from 'react';
 import MaterialTable from 'material-table';
 import { DateRangePicker } from 'react-date-range';
 import Fab from '@material-ui/core/Fab';
-import AddBox from '@material-ui/icons/AddBox';
-import AddIcon from '@material-ui/icons/Add';
-import ArrowUpward from '@material-ui/icons/ArrowUpward';
-import Check from '@material-ui/icons/Check';
-import ChevronLeft from '@material-ui/icons/ChevronLeft';
-import ChevronRight from '@material-ui/icons/ChevronRight';
-import Clear from '@material-ui/icons/Clear';
-import DeleteOutline from '@material-ui/icons/DeleteOutline';
-import Edit from '@material-ui/icons/Edit';
-import FilterList from '@material-ui/icons/FilterList';
-import FirstPage from '@material-ui/icons/FirstPage';
-import LastPage from '@material-ui/icons/LastPage';
-import Remove from '@material-ui/icons/Remove';
-import SaveAlt from '@material-ui/icons/SaveAlt';
-import Search from '@material-ui/icons/Search';
-import ViewColumn from '@material-ui/icons/ViewColumn';
-import VisibilityIcon from '@material-ui/icons/Visibility';
-import VisibilityOffIcon from '@material-ui/icons/VisibilityOff';
-import Loading from './Reusable/Loading';
+import Button from '@material-ui/core/Button';
+import Tooltip from '@material-ui/core/Tooltip';
 
+import {
+  Add,
+  AddBox,
+  ArrowUpward,
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clear,
+  DeleteOutline,
+  Edit,
+  FilterList,
+  FirstPage,
+  LastPage,
+  Remove,
+  SaveAlt,
+  Search,
+  ViewColumn,
+  Visibility,
+  VisibilityOff
+} from '@material-ui/icons';
+import SaveIcon from '@material-ui/icons/Save';
+import Loading from './Reusable/Loading';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
 
+const request = require('request');
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -50,15 +56,18 @@ const tableIcons = {
   ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
 };
+
 const StyledLoadingCircle = styled(Loading)`
   position: absolute;
   top: 38%;
   left: 50%;
 `;
+
 const Container = styled.div`
   float: right;
   padding: 5%;
 `;
+
 const DateRangeContainer = styled.div`
   z-index: 201;
   position: fixed;
@@ -68,25 +77,37 @@ const DateRangeContainer = styled.div`
   border-radius: 10px;
   padding: 0.8%;
 `;
+
 const MainDetailsContainer = styled.div`
   text-align: right;
 `;
+
 const TableContainer = styled.div`
   position: relative;
-`;
-const MainSumText = styled.h1`
-  font-family: Georgia, serif;
-  font-size: 80px;
-  font-weight: 400;
-  cursor: pointer;
+  padding-top: 3vh;
+  z-index: 198;
 `;
 
-const StyledVisibilityOffIcon = styled(VisibilityOffIcon)`
+const MainSumText = styled.h1`
+  font-family: Georgia, serif;
+  font-size: 9vh;
+  font-weight: 300;
+  cursor: pointer;
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+    font-weight: 600;
+    transform: scale(1.2, 1.2);
+    transition: transform 0.15s, opacity 2s;
+  }
+`;
+
+const StyledVisibilityOffIcon = styled(VisibilityOff)`
   width: 50px !important;
   height: 50px !important;
 `;
 
-const StyledVisibilityIcon = styled(VisibilityIcon)`
+const StyledVisibilityIcon = styled(Visibility)`
   width: 50px !important;
   height: 50px !important;
 `;
@@ -105,11 +126,20 @@ const ShadeOver = styled.div`
 `;
 
 const BottomFloatingButton = styled.div`
-  position: absolute;
+  position: fixed;
+  cursor: pointer;
+  z-index:199
   bottom: 3%;
   right: 3%;
+  opacity:0.4;
+
+  &:hover {
+    opacity: 1;
+    color: #FFCCCB 
+    transform: scale(1.2,1.2);
+    transition: transform 0.25s, opacity 0.25s;
+  }  
 `;
-const request = require('request');
 export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -162,7 +192,7 @@ export default class Dashboard extends React.Component {
       activeWalletId;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
-        console.log(`Error ${error}`);
+        logger.error(`Error ${error}`);
       }
       let dataObject = JSON.parse(res.body);
       this.setState({
@@ -177,10 +207,9 @@ export default class Dashboard extends React.Component {
     let urlToPost =
       'http://localhost:4000/api/event/fetchAllEventByWalletId/' +
       activeWalletId;
-    console.log(urlToPost);
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
-        console.log(`Error ${error}`);
+        logger.error(`Error ${error}`);
       }
       let dataObject = JSON.parse(res.body);
       let totalSpent = 0;
@@ -196,8 +225,6 @@ export default class Dashboard extends React.Component {
   };
 
   handleSelectNewDateRange = ranges => {
-    // console.log(ranges.selection.startDate);
-    // console.log(ranges.selection.endDate);
     this.setState({
       selectionRange: {
         startDate: ranges.selection.startDate,
@@ -232,8 +259,6 @@ export default class Dashboard extends React.Component {
   };
 
   handleTableAdd = async newData => {
-    console.log(newData);
-    console.log(this.props.WalletId);
     request.post(
       'http://localhost:4000/api/event/addNewEventToDatabase',
       {
@@ -246,9 +271,9 @@ export default class Dashboard extends React.Component {
       },
       (error, res, body) => {
         if (error) {
-          console.log(`Error ${error}`);
+          logger.error(`Error ${error}`);
         }
-        console.log(`${res.body}`);
+
         this.getEventsDetails();
       }
     );
@@ -315,13 +340,13 @@ export default class Dashboard extends React.Component {
       isSelectDate,
       isShowTable,
       totalSum,
-      currency,
+
       goalSum,
       isShowSum,
       totalSpent,
       isFetchingData
     } = this.state;
-    const { handleAddNewItem } = this.props;
+    const { handleAddNewItem, currency } = this.props;
 
     return (
       <Container>
@@ -339,7 +364,7 @@ export default class Dashboard extends React.Component {
                       {totalSpent}
                     </p>
                   </MainSumText>
-                  Total Sum In Wallet: {this.state.totalSum}
+                  Total Sum In Wallet: {totalSum}
                   <br />
                   Goal is: {goalSum} ({this.getSumDifference()})
                 </div>
@@ -355,11 +380,13 @@ export default class Dashboard extends React.Component {
                   Goal is: {goalSum} ({this.getSumDifference()}){' '}
                 </div>
               )}
-              <BottomFloatingButton>
-                <Fab onClick={handleAddNewItem} size='medium' color='default'>
-                  <AddIcon />
-                </Fab>
-              </BottomFloatingButton>
+              <Tooltip title='Spend again ah?'>
+                <BottomFloatingButton>
+                  <Fab onClick={handleAddNewItem} size='medium' color='default'>
+                    <Add />
+                  </Fab>
+                </BottomFloatingButton>
+              </Tooltip>
             </MainDetailsContainer>
             {isShowTable && (
               <TableContainer>
@@ -409,9 +436,15 @@ export default class Dashboard extends React.Component {
                   }}
                   icons={tableIcons}
                 />
-                <button onClick={this.handleSelectDateRange}>
-                  Select Date Range
-                </button>
+                <Button
+                  variant='contained'
+                  color='primary'
+                  size='small'
+                  startIcon={<AddBox />}
+                  onClick={this.handleSelectDateRange}
+                >
+                  Select Date
+                </Button>
               </TableContainer>
             )}
             {isSelectDate && (
@@ -426,9 +459,15 @@ export default class Dashboard extends React.Component {
                     maxDate={new Date()}
                   />
                   <br />
-                  <button onClick={this.handleConfirmSelectDates}>
+                  <Button
+                    variant='contained'
+                    color='primary'
+                    size='small'
+                    startIcon={<AddBox />}
+                    onClick={this.handleConfirmSelectDates}
+                  >
                     confirm
-                  </button>
+                  </Button>
                 </DateRangeContainer>
               </div>
             )}
