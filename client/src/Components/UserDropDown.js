@@ -16,10 +16,15 @@ const request = require('request');
 const Container = styled.div`
   z-index: 199;
   position: absolute;
-  top: 6%;
-  padding-left: 3%;
+  padding-left: 59px;
   padding-right: 3%;
-  width: 20%;
+  width: 80vw;
+  max-width: 300px;
+  display: ${({ isDropDown }) => (isDropDown ? 'block' : 'none')} !important;
+  opacity: ${({ isDropDown }) => (isDropDown ? 1 : 0)} !important;
+  &:hover {
+    transition: opacity 1s linear;
+  }
 `;
 //#eceaea
 const StyledList = styled(List)`
@@ -58,7 +63,7 @@ export default class UserDropDown extends React.Component {
       },
       (error, res, body) => {
         if (error) {
-          logger.error(`Error ${error}`);
+          console.log(`Error ${error}`);
         }
       }
     );
@@ -70,9 +75,9 @@ export default class UserDropDown extends React.Component {
 
   render() {
     const { openSetup } = this.state;
-    const {} = this.props;
+    const { isDropDown } = this.props;
     return (
-      <Container>
+      <Container isDropDown={isDropDown}>
         <StyledList component='nav'>
           <ListItem button onClick={this.handleSetupClick}>
             <ListItemIcon>

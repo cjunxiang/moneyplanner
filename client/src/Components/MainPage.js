@@ -13,6 +13,8 @@ const MainPageContainer = styled.div`
 `;
 
 const StyledLeftBar = styled(LeftBar)`
+  display: ${({ isleftbaropen }) =>
+    isleftbaropen ? 'block' : 'none'} !important;
   position: fixed;
   left: 0;
   top: 0;
@@ -24,8 +26,7 @@ const StyledDashboard = styled(Dashboard)`
   top: 50px;
 `;
 const StyledTopBar = styled(TopBar)`
-  height: 50px;
-  z-index: 198;
+  z-index: 199;
   position: absolute;
 `;
 
@@ -108,7 +109,8 @@ export default class MainPage extends React.Component {
       isAddItem,
       isLeftBarOpen,
       activeWalletId,
-      currency
+      currency,
+      wallets
     } = this.state;
     return (
       <MainPageContainer>
@@ -117,15 +119,18 @@ export default class MainPage extends React.Component {
           handleUserDropDown={this.handleUserDropDown}
           handleDrawerOpen={this.handleDrawerOpen}
         />
-        {isDropDown && (
-          <StyledUserDropDown handleUserDropDown={this.handleUserDropDown} />
-        )}
-        {isLeftBarOpen && (
-          <StyledLeftBar
-            isLeftBarOpen={isLeftBarOpen}
-            handleDrawerOpen={this.handleDrawerOpen}
-          />
-        )}
+        <StyledUserDropDown
+          activeWalletId={activeWalletId}
+          currency={currency}
+          handleUserDropDown={this.handleUserDropDown}
+          isDropDown={isDropDown}
+        />
+        <StyledLeftBar
+          wallets={wallets}
+          isLeftBarOpen={isLeftBarOpen}
+          handleDrawerOpen={this.handleDrawerOpen}
+          isLeftBarOpen={isLeftBarOpen}
+        />
         <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
           updateStartEndDates={this.updateStartEndDates}
@@ -134,7 +139,10 @@ export default class MainPage extends React.Component {
         />
         {isAddItem && (
           <div>
-            <AddNewExpenditurePopUp handleAddNewItem={this.handleAddNewItem} />
+            <AddNewExpenditurePopUp
+              activeWalletId={activeWalletId}
+              handleAddNewItem={this.handleAddNewItem}
+            />
             <ShadeOver onClick={this.handleAddNewItem} />
           </div>
         )}

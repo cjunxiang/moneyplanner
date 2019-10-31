@@ -27,7 +27,6 @@ import {
   Visibility,
   VisibilityOff
 } from '@material-ui/icons';
-import SaveIcon from '@material-ui/icons/Save';
 import Loading from './Reusable/Loading';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
@@ -192,7 +191,7 @@ export default class Dashboard extends React.Component {
       activeWalletId;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
-        logger.error(`Error ${error}`);
+        console.log(`Error ${error}`);
       }
       let dataObject = JSON.parse(res.body);
       this.setState({
@@ -209,13 +208,13 @@ export default class Dashboard extends React.Component {
       activeWalletId;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
-        logger.error(`Error ${error}`);
+        console.log(`Error ${error}`);
       }
       let dataObject = JSON.parse(res.body);
       let totalSpent = 0;
-      for (const data of dataObject) {
+      dataObject.forEach(data => {
         totalSpent = totalSpent + data.Price;
-      }
+      });
       this.setState({
         data: dataObject,
         totalSpent: -totalSpent,
@@ -271,7 +270,7 @@ export default class Dashboard extends React.Component {
       },
       (error, res, body) => {
         if (error) {
-          logger.error(`Error ${error}`);
+          console.log(`Error ${error}`);
         }
 
         this.getEventsDetails();
@@ -295,9 +294,9 @@ export default class Dashboard extends React.Component {
       },
       (error, res, body) => {
         if (error) {
-          logger.error(`Error ${error}`);
+          console.log(`Error ${error}`);
         }
-        logger.info(`Item Updated Successfully: ${newData}`);
+        console.log(`Item Updated Successfully: ${newData}`);
         this.getEventsDetails();
       }
     );
@@ -308,9 +307,9 @@ export default class Dashboard extends React.Component {
       'http://localhost:4000/api/event/deleteEventByEventId/' + oldDataId;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
-        logger.error(`Error ${error}`);
+        console.log(`Error ${error}`);
       }
-      logger.info('deleted Successfully');
+      console.log('deleted Successfully');
       this.getEventsDetails();
     });
   };
