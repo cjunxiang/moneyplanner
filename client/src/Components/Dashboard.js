@@ -283,7 +283,6 @@ export default class Dashboard extends React.Component {
     let IdToBeUpdated = oldData._id;
     let urlToPost =
       'http://localhost:4000/api/event/editEventByEventId/' + IdToBeUpdated;
-    console.log(urlToPost);
     request.post(
       urlToPost,
       {
@@ -296,24 +295,22 @@ export default class Dashboard extends React.Component {
       },
       (error, res, body) => {
         if (error) {
-          console.log(`Error ${error}`);
+          logger.error(`Error ${error}`);
         }
-        console.log(`Item Updated Successfully: ${newData}`);
+        logger.info(`Item Updated Successfully: ${newData}`);
         this.getEventsDetails();
       }
     );
   };
 
   handleTableDelete = async oldDataId => {
-    console.log(oldDataId);
     let urlToPost =
       'http://localhost:4000/api/event/deleteEventByEventId/' + oldDataId;
-    console.log(urlToPost);
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
-        console.log(`Error ${error}`);
+        logger.error(`Error ${error}`);
       }
-      console.log('deleted Successfully');
+      logger.info('deleted Successfully');
       this.getEventsDetails();
     });
   };

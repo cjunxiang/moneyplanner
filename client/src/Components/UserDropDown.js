@@ -58,9 +58,8 @@ export default class UserDropDown extends React.Component {
       },
       (error, res, body) => {
         if (error) {
-          console.log(`Error ${error}`);
+          logger.error(`Error ${error}`);
         }
-        console.log(res.body);
       }
     );
   };

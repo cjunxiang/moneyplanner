@@ -15,9 +15,9 @@ const rotateLogFiles = new transports.DailyRotateFile({
 });
 
 rotateLogFiles.on('rotate', (oldFilename, newFilename) => {
-  console.log(`${new Date()}`);
-  console.log(`Old log file will be stored for 30 days: ${oldFilename}`);
-  console.log(`New log file created: ${newFilename}`);
+  logger.debug(`${new Date()}`);
+  logger.debug(`Old log file will be stored for 30 days: ${oldFilename}`);
+  logger.debug(`New log file created: ${newFilename}`);
 });
 
 /**
