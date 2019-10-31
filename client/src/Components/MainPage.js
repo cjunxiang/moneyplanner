@@ -53,6 +53,7 @@ export default class MainPage extends React.Component {
       userId: 1,
       wallets: {},
       activeWalletId: '5db67f8643ac58b93992ca14',
+      currency: 'SGD$',
       userIcon: '',
       isDropDown: false,
       isAddItem: false,
@@ -78,7 +79,6 @@ export default class MainPage extends React.Component {
       startDate: startDate,
       endDate: endDate
     });
-    console.log(startDate);
   };
 
   handleUserDropDown = () => {
@@ -86,7 +86,6 @@ export default class MainPage extends React.Component {
     this.setState({
       isDropDown: !isDropDown
     });
-    console.log(isDropDown);
   };
 
   handleAddNewItem = () => {
@@ -108,7 +107,8 @@ export default class MainPage extends React.Component {
       isDropDown,
       isAddItem,
       isLeftBarOpen,
-      activeWalletId
+      activeWalletId,
+      currency
     } = this.state;
     return (
       <MainPageContainer>
@@ -130,6 +130,7 @@ export default class MainPage extends React.Component {
           handleAddNewItem={this.handleAddNewItem}
           updateStartEndDates={this.updateStartEndDates}
           activeWalletId={activeWalletId}
+          currency={currency}
         />
         {isAddItem && (
           <div>
