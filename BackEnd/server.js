@@ -36,7 +36,7 @@ mongoose.connect('mongodb://127.0.0.1:27017/moneyplanner', {
 });
 const connection = mongoose.connection;
 connection.once('open', function() {
-  logger.listen('MongoDB database connection established successfully');
+  logger.info('MongoDB database connection established successfully');
 });
 
 module.exports = app;
