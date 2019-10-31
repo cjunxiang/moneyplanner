@@ -36,7 +36,16 @@ const fetchEventByEventId = async (req, res) => {
 };
 
 //TODO: not done, needs filtering;; find efficient method
-const fetchAllEventByWalletId = async (req, res) => {};
+const fetchAllEventByWalletId = async (req, res) => {
+  const walletId = req.params.id;
+  EventDb.find({ WalletId: walletId }, function(err, events) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.json(events);
+    }
+  });
+};
 
 const editEventByEventId = async (req, res) => {
   logger.debug('editEventByEventId method started.');

@@ -50,6 +50,9 @@ export default class MainPage extends React.Component {
     super(props);
     this.state = {
       userName: 'C.Junxiang',
+      userId: 1,
+      wallets: {},
+      activeWalletId: '5db67f8643ac58b93992ca14',
       userIcon: '',
       isDropDown: false,
       isAddItem: false,
@@ -59,7 +62,10 @@ export default class MainPage extends React.Component {
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    //this.getUserId();
+    //fetchAllWallets;
+  };
 
   parseDateIntoString = date => {
     return moment(date).format('Do MMM dddd h:mm a');
@@ -97,7 +103,13 @@ export default class MainPage extends React.Component {
   };
 
   render() {
-    const { userName, isDropDown, isAddItem, isLeftBarOpen } = this.state;
+    const {
+      userName,
+      isDropDown,
+      isAddItem,
+      isLeftBarOpen,
+      activeWalletId
+    } = this.state;
     return (
       <MainPageContainer>
         <StyledTopBar
@@ -117,6 +129,7 @@ export default class MainPage extends React.Component {
         <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
           updateStartEndDates={this.updateStartEndDates}
+          activeWalletId={activeWalletId}
         />
         {isAddItem && (
           <div>

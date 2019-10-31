@@ -8,13 +8,13 @@ const wallet = require('./db/wallet.js');
  */
 router.post('/event/addNewEventToDatabase', event.AddNewEventToDatabase);
 router.post('/event/fetchAllEvents', event.fetchAllEvents);
-router.post('/wallet/fetchEventByEventId/:id', event.fetchEventByEventId);
+router.post('/event/fetchEventByEventId/:id', event.fetchEventByEventId);
 router.post(
-  '/wallet/fetchAllEventByWalletId/:id',
+  '/event/fetchAllEventByWalletId/:id',
   event.fetchAllEventByWalletId
 );
-router.post('/wallet/editEventByEventId/:id', event.editEventByEventId);
-router.post('/wallet/deleteEventByEventId/:id', event.deleteEventByEventId);
+router.post('/event/editEventByEventId/:id', event.editEventByEventId);
+router.post('/event/deleteEventByEventId/:id', event.deleteEventByEventId);
 
 /**
  * Wallet database Functions

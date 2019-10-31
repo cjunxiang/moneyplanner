@@ -41,6 +41,7 @@ export default class UserDropDown extends React.Component {
       openSetup: !this.state.openSetup
     });
   };
+
   testApi = () => {
     request.post(
       'http://localhost:4000/api/event/addNewEventToDatabase',
@@ -64,6 +65,30 @@ export default class UserDropDown extends React.Component {
     );
   };
 
+  setWalletTarget = async () => {
+    // request.post(
+    //   '/wallet/editWalletByWalletId/:id',
+    //   {
+    //     json: {
+    //       WalletName,
+    //       UserId,
+    //       TargetSum,
+    //       TotalSum,
+    //       Currency,
+    //       Active
+    //     }
+    //   },
+    //   (error, res, body) => {
+    //     if (error) {
+    //       console.log(`Error ${error}`);
+    //     }
+    //     // console.log(res.body);
+    //   }
+    // );
+  };
+
+  setWalletSum = async () => {};
+
   render() {
     const { openSetup } = this.state;
     const {} = this.props;
@@ -79,13 +104,13 @@ export default class UserDropDown extends React.Component {
           </ListItem>
           <Collapse in={openSetup} timeout='auto' unmountOnExit>
             <List component='div' disablePadding>
-              <ListItem button>
+              <ListItem button onClick={this.setWalletSum}>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>
                 <ListItemText primary='Set initial Sum' />
               </ListItem>
-              <ListItem button>
+              <ListItem button onClick={this.setWalletTarget}>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>

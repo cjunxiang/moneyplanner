@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 let Event = new Schema({
   WalletId: {
-    type: Number
+    type: String
   },
   InflowOrOutFlow: {
     type: Number

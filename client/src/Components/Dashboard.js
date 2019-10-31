@@ -109,8 +109,9 @@ export default class Dashboard extends React.Component {
     super(props);
     this.state = {
       currency: 'SGD$',
-      totalSum: '98,720',
-      goalSum: '100,000',
+      totalSum: 0,
+      totalSpent: 0,
+      goalSum: 0,
       isShowSum: true,
       isShowTable: false,
       isFetchingData: true,
@@ -130,31 +131,63 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount = () => {
-    //this.getTargetSum();
     this.fetchAllData();
   };
 
-  fetchAllData = () => {
-    request.post(
-      'http://localhost:4000/api/event/fetchAllEvents',
-      {},
-      (error, res, body) => {
-        if (error) {
-          console.log(`Error ${error}`);
-        }
-        let dataObject = JSON.parse(res.body);
-        let sum = 0;
-        for (const event of dataObject) {
-          sum += event.Price;
-        }
-        let sumString = sum.toString();
-        this.setState({
-          data: dataObject,
-          totalSum: sumString,
-          isFetchingData: false
-        });
+  /**
+   * Fetch all Data does:
+   * Fetch all expenditures based on wallet. (Currently fetch all wallet in DB)
+   * Calculate Wallet total remaining $$
+   * Calculate Target & Current difference
+   */
+  fetchAllData = async () => {
+    this.getWalletDetails();
+    this.getEventsDetails();
+    this.setState({
+      isFetchingData: false
+    });
+  };
+
+  getWalletDetails = () => {
+    const { activeWalletId } = this.props;
+    let urlToPost =
+      'http://localhost:4000/api/wallet/fetchWalletByWalletId/' +
+      activeWalletId;
+    request.post(urlToPost, {}, (error, res, body) => {
+      if (error) {
+        console.log(`Error ${error}`);
       }
-    );
+      let dataObject = JSON.parse(res.body);
+      this.setState({
+        totalSum: dataObject.TotalSum,
+        goalSum: dataObject.TargetSum
+      });
+    });
+  };
+
+  getEventsDetails = () => {
+    const { activeWalletId } = this.props;
+    let urlToPost =
+      'http://localhost:4000/api/event/fetchAllEventByWalletId/' +
+      activeWalletId;
+    console.log(urlToPost);
+    request.post(urlToPost, {}, (error, res, body) => {
+      if (error) {
+        console.log(`Error ${error}`);
+      }
+      let dataObject = JSON.parse(res.body);
+      let totalSpent = 0;
+      for (let event of dataObject) {
+        totalSpent += event.Price;
+      }
+      console.log('hello there');
+      console.log(dataObject);
+      this.setState({
+        data: dataObject,
+        totalSpent: -totalSpent,
+        isFetchingData: false
+      });
+    });
   };
 
   handleSelectNewDateRange = ranges => {
@@ -206,7 +239,7 @@ export default class Dashboard extends React.Component {
 
   getSumDifference = () => {
     const { goalSum, totalSum } = this.state;
-    let diff = this.toInt(goalSum) - this.toInt(totalSum);
+    let diff = goalSum - totalSum;
     if (diff >= 0) {
       return '+' + diff;
     } else {
@@ -246,7 +279,8 @@ export default class Dashboard extends React.Component {
                       {totalSum}
                     </p>
                   </MainSumText>
-                  Goal is: {goalSum} ({this.getSumDifference()}){' '}
+                  Goal is: {goalSum} ({this.getSumDifference()}) <br />
+                  Total Spent: {this.state.totalSpent}
                 </div>
               )}
               {!isShowSum && (
