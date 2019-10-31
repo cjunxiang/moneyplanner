@@ -68,6 +68,12 @@ const DateRangeContainer = styled.div`
   border-radius: 10px;
   padding: 0.8%;
 `;
+const MainDetailsContainer = styled.div`
+  text-align: right;
+`;
+const TableContainer = styled.div`
+  position: relative;
+`;
 const MainSumText = styled.h1`
   font-family: Georgia, serif;
   font-size: 80px;
@@ -312,6 +318,7 @@ export default class Dashboard extends React.Component {
       currency,
       goalSum,
       isShowSum,
+      totalSpent,
       isFetchingData
     } = this.state;
     const { handleAddNewItem } = this.props;
@@ -321,19 +328,20 @@ export default class Dashboard extends React.Component {
         {isFetchingData && <StyledLoadingCircle />}
         {!isFetchingData && (
           <div>
-            <div>
-              Total Balance
+            <MainDetailsContainer>
+              Total Spent
               {isShowSum && (
                 <div>
                   <StyledVisibilityIcon onClick={this.handleIsShowSum} />
                   <MainSumText>
                     <p onClick={this.handleIsShowTable}>
                       {currency}
-                      {totalSum}
+                      {totalSpent}
                     </p>
                   </MainSumText>
-                  Goal is: {goalSum} ({this.getSumDifference()}) <br />
-                  Total Spent: {this.state.totalSpent}
+                  Total Sum In Wallet: {this.state.totalSum}
+                  <br />
+                  Goal is: {goalSum} ({this.getSumDifference()})
                 </div>
               )}
               {!isShowSum && (
@@ -342,60 +350,9 @@ export default class Dashboard extends React.Component {
                   <MainSumText>
                     <p onClick={this.handleIsShowTable}>{currency} &nbsp;***</p>
                   </MainSumText>
+                  Total Sum In Wallet: {this.state.totalSum}
+                  <br />
                   Goal is: {goalSum} ({this.getSumDifference()}){' '}
-                </div>
-              )}
-              {isShowTable && (
-                <div>
-                  <MaterialTable
-                    title='See la you spend so much.'
-                    columns={columns}
-                    data={data}
-                    editable={{
-                      onRowAdd: newData =>
-                        new Promise(resolve => {
-                          setTimeout(() => {
-                            resolve();
-                            this.setState(prevState => {
-                              const data = [...prevState.data];
-                              data.push(newData);
-                              return { ...prevState, data };
-                            });
-                            this.handleTableAdd(newData);
-                          }, 600);
-                        }),
-                      onRowUpdate: (newData, oldData) =>
-                        new Promise(resolve => {
-                          setTimeout(() => {
-                            resolve();
-                            if (oldData) {
-                              this.setState(prevState => {
-                                const data = [...prevState.data];
-                                data[data.indexOf(oldData)] = newData;
-                                return { ...prevState, data };
-                              });
-                            }
-                            this.handleTableUpdate(newData, oldData);
-                          }, 600);
-                        }),
-                      onRowDelete: oldData =>
-                        new Promise(resolve => {
-                          setTimeout(() => {
-                            resolve();
-                            this.setState(prevState => {
-                              const data = [...prevState.data];
-                              data.splice(data.indexOf(oldData), 1);
-                              return { ...prevState, data };
-                            });
-                            this.handleTableDelete(oldData._id);
-                          }, 600);
-                        })
-                    }}
-                    icons={tableIcons}
-                  />
-                  <button onClick={this.handleSelectDateRange}>
-                    Select Date Range
-                  </button>
                 </div>
               )}
               <BottomFloatingButton>
@@ -403,8 +360,60 @@ export default class Dashboard extends React.Component {
                   <AddIcon />
                 </Fab>
               </BottomFloatingButton>
-            </div>
-
+            </MainDetailsContainer>
+            {isShowTable && (
+              <TableContainer>
+                <MaterialTable
+                  title='Waliu... can eat so many plate of chicken rice sia'
+                  columns={columns}
+                  data={data}
+                  editable={{
+                    onRowAdd: newData =>
+                      new Promise(resolve => {
+                        setTimeout(() => {
+                          resolve();
+                          this.setState(prevState => {
+                            const data = [...prevState.data];
+                            data.push(newData);
+                            return { ...prevState, data };
+                          });
+                          this.handleTableAdd(newData);
+                        }, 600);
+                      }),
+                    onRowUpdate: (newData, oldData) =>
+                      new Promise(resolve => {
+                        setTimeout(() => {
+                          resolve();
+                          if (oldData) {
+                            this.setState(prevState => {
+                              const data = [...prevState.data];
+                              data[data.indexOf(oldData)] = newData;
+                              return { ...prevState, data };
+                            });
+                          }
+                          this.handleTableUpdate(newData, oldData);
+                        }, 600);
+                      }),
+                    onRowDelete: oldData =>
+                      new Promise(resolve => {
+                        setTimeout(() => {
+                          resolve();
+                          this.setState(prevState => {
+                            const data = [...prevState.data];
+                            data.splice(data.indexOf(oldData), 1);
+                            return { ...prevState, data };
+                          });
+                          this.handleTableDelete(oldData._id);
+                        }, 600);
+                      })
+                  }}
+                  icons={tableIcons}
+                />
+                <button onClick={this.handleSelectDateRange}>
+                  Select Date Range
+                </button>
+              </TableContainer>
+            )}
             {isSelectDate && (
               <div>
                 <ShadeOver onClick={this.handleConfirmSelectDates} />
