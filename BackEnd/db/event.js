@@ -49,7 +49,7 @@ const fetchAllEventByWalletId = async (req, res) => {
 
 const editEventByEventId = async (req, res) => {
   logger.debug('editEventByEventId method started.');
-  EventDB.findById(req.params.id, function(err, updatedEvent) {
+  EventDb.findById(req.params.id, function(err, updatedEvent) {
     if (!updatedEvent) res.status(404).send('data is not found');
     else {
       updatedEvent.WalletId = req.body.WalletId;
@@ -73,7 +73,7 @@ const editEventByEventId = async (req, res) => {
 
 const deleteEventByEventId = async (req, res) => {
   logger.debug('deleteEventByEventId method started.');
-  EventDB.findByIdAndRemove(req.params.id, function(err, event) {
+  EventDb.findByIdAndRemove(req.params.id, function(err, event) {
     if (!event) res.status(404).send('data is not found');
     else {
       res.json('wallet deleted!');

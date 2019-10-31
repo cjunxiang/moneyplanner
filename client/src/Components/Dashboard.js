@@ -120,6 +120,7 @@ export default class Dashboard extends React.Component {
         endDate: new Date(),
         key: 'selection'
       },
+      data: [],
       columns: [
         { title: 'Type', field: 'Type' },
         { title: 'Expenditure', field: 'Name' },
@@ -177,11 +178,9 @@ export default class Dashboard extends React.Component {
       }
       let dataObject = JSON.parse(res.body);
       let totalSpent = 0;
-      for (let event of dataObject) {
-        totalSpent += event.Price;
+      for (const data of dataObject) {
+        totalSpent = totalSpent + data.Price;
       }
-      console.log('hello there');
-      console.log(dataObject);
       this.setState({
         data: dataObject,
         totalSpent: -totalSpent,
@@ -230,6 +229,56 @@ export default class Dashboard extends React.Component {
   handleIsShowSum = () => {
     this.setState({
       isShowSum: !this.state.isShowSum
+    });
+  };
+
+  handleTableAdd = async newData => {
+    console.log(newData);
+    console.log(this.props.WalletId);
+    request.post(
+      'http://localhost:4000/api/event/addNewEventToDatabase',
+      {
+        json: {
+          ...newData,
+          InflowOrOutFlow: 0,
+          WalletId: this.props.activeWalletId,
+          Price: parseInt(newData.Price)
+        }
+      },
+      (error, res, body) => {
+        if (error) {
+          console.log(`Error ${error}`);
+        }
+        console.log(`${res.body}`);
+      }
+    );
+  };
+
+  handleTableUpdate = async (newData, oldData) => {
+    let IdToBeUpdated = oldData._id;
+    let urlToPost =
+      'http://localhost:4000/api/event/editEventByEventId/' + IdToBeUpdated;
+    console.log(urlToPost);
+    request.post(urlToPost, { json: { newData } }, (error, res, body) => {
+      if (error) {
+        console.log(`Error ${error}`);
+      }
+      console.log(`Item Updated Successfully: ${newData}`);
+      // this.getEventsDetails();
+    });
+  };
+
+  handleTableDelete = async oldDataId => {
+    console.log(oldDataId);
+    let urlToPost =
+      'http://localhost:4000/api/event/deleteEventByEventId/' + oldDataId;
+    console.log(urlToPost);
+    request.post(urlToPost, {}, (error, res, body) => {
+      if (error) {
+        console.log(`Error ${error}`);
+      }
+      console.log('deleted Successfully');
+      this.getEventsDetails();
     });
   };
 
@@ -287,9 +336,7 @@ export default class Dashboard extends React.Component {
                 <div>
                   <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
                   <MainSumText>
-                    <p onClick={this.handleIsShowTable}>
-                      {currency} &nbsp;******
-                    </p>
+                    <p onClick={this.handleIsShowTable}>{currency} &nbsp;***</p>
                   </MainSumText>
                   Goal is: {goalSum} ({this.getSumDifference()}){' '}
                 </div>
@@ -301,9 +348,24 @@ export default class Dashboard extends React.Component {
                     columns={columns}
                     data={data}
                     editable={{
-                      onRowAdd: newData => {},
-                      onRowUpdate: (newData, oldData) => {},
-                      onRowDelete: () => {}
+                      onRowAdd: newData => {
+                        this.handleTableAdd(newData);
+                      },
+                      onRowUpdate: (newData, oldData) => {
+                        this.handleTableUpdate(newData, oldData);
+                      },
+                      onRowDelete: oldData =>
+                        new Promise(resolve => {
+                          setTimeout(() => {
+                            resolve();
+                            this.setState(prevState => {
+                              const data = [...prevState.data];
+                              data.splice(data.indexOf(oldData), 1);
+                              return { ...prevState, data };
+                            });
+                            this.handleTableDelete(oldData._id);
+                          }, 600);
+                        })
                     }}
                     icons={tableIcons}
                   />
