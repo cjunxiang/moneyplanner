@@ -134,7 +134,7 @@ export default class Dashboard extends React.Component {
   componentDidMount = () => {
     this.fetchAllData();
   };
-
+  componentDidUpdate = (prevProps, prevState) => {};
   /**
    * Fetch all Data does:
    * Fetch all expenditures based on wallet. (Currently fetch all wallet in DB)
@@ -205,13 +205,6 @@ export default class Dashboard extends React.Component {
     const { selectionRange } = this.state;
     this.handleSelectDateRange();
     updateStartEndDates(selectionRange.startDate, selectionRange.endDate);
-    let displayString =
-      selectionRange.startDate.toString().substring(0, 15) +
-      ' - ' +
-      selectionRange.endDate.toString().substring(0, 15);
-    this.setState({
-      displayString: displayString
-    });
   };
 
   handleIsShowTable = () => {
@@ -250,6 +243,7 @@ export default class Dashboard extends React.Component {
           console.log(`Error ${error}`);
         }
         console.log(`${res.body}`);
+        this.getEventsDetails();
       }
     );
   };
@@ -259,13 +253,24 @@ export default class Dashboard extends React.Component {
     let urlToPost =
       'http://localhost:4000/api/event/editEventByEventId/' + IdToBeUpdated;
     console.log(urlToPost);
-    request.post(urlToPost, { json: { newData } }, (error, res, body) => {
-      if (error) {
-        console.log(`Error ${error}`);
+    request.post(
+      urlToPost,
+      {
+        json: {
+          ...newData,
+          WalletId: this.props.activeWalletId,
+          Price: parseInt(newData.Price),
+          InflowOrOutFlow: 0
+        }
+      },
+      (error, res, body) => {
+        if (error) {
+          console.log(`Error ${error}`);
+        }
+        console.log(`Item Updated Successfully: ${newData}`);
+        this.getEventsDetails();
       }
-      console.log(`Item Updated Successfully: ${newData}`);
-      // this.getEventsDetails();
-    });
+    );
   };
 
   handleTableDelete = async oldDataId => {
@@ -303,7 +308,6 @@ export default class Dashboard extends React.Component {
       selectionRange,
       isSelectDate,
       isShowTable,
-      displayString,
       totalSum,
       currency,
       goalSum,
@@ -344,16 +348,36 @@ export default class Dashboard extends React.Component {
               {isShowTable && (
                 <div>
                   <MaterialTable
-                    title={displayString}
+                    title='See la you spend so much.'
                     columns={columns}
                     data={data}
                     editable={{
-                      onRowAdd: newData => {
-                        this.handleTableAdd(newData);
-                      },
-                      onRowUpdate: (newData, oldData) => {
-                        this.handleTableUpdate(newData, oldData);
-                      },
+                      onRowAdd: newData =>
+                        new Promise(resolve => {
+                          setTimeout(() => {
+                            resolve();
+                            this.setState(prevState => {
+                              const data = [...prevState.data];
+                              data.push(newData);
+                              return { ...prevState, data };
+                            });
+                            this.handleTableAdd(newData);
+                          }, 600);
+                        }),
+                      onRowUpdate: (newData, oldData) =>
+                        new Promise(resolve => {
+                          setTimeout(() => {
+                            resolve();
+                            if (oldData) {
+                              this.setState(prevState => {
+                                const data = [...prevState.data];
+                                data[data.indexOf(oldData)] = newData;
+                                return { ...prevState, data };
+                              });
+                            }
+                            this.handleTableUpdate(newData, oldData);
+                          }, 600);
+                        }),
                       onRowDelete: oldData =>
                         new Promise(resolve => {
                           setTimeout(() => {
