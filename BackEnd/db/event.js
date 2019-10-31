@@ -7,8 +7,6 @@ const EventDb = require('./Event.model');
 
 const AddNewEventToDatabase = async (req, res) => {
   logger.debug('AddNewEvent method started.');
-  console.log(req.body);
-
   let newEvent = new EventDb(req.body);
   newEvent
     .save()
@@ -22,7 +20,7 @@ const AddNewEventToDatabase = async (req, res) => {
 const fetchAllEvents = async (req, res) => {
   EventDb.find(function(err, events) {
     if (err) {
-      console.log(err);
+      logger.error(err);
     } else {
       res.json(events);
     }
@@ -40,7 +38,7 @@ const fetchAllEventByWalletId = async (req, res) => {
   const walletId = req.params.id;
   EventDb.find({ WalletId: walletId }, function(err, events) {
     if (err) {
-      console.log(err);
+      logger.error(err);
     } else {
       res.json(events);
     }

@@ -50,7 +50,6 @@ export default class AddNewExpenditurePopUp extends React.Component {
   handleAddNewItem = () => {
     const { handleAddNewItem } = this.props;
     handleAddNewItem();
-    console.log('exitting pop-up');
   };
 
   handleTypeChange = newInput => {

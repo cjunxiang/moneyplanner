@@ -4,8 +4,6 @@ const WalletDb = require('./Wallet.model');
 
 const AddNewWalletToDatabase = async (req, res) => {
   logger.debug('testWalletFunction method started.');
-  console.log(req.body);
-
   let newWallet = new WalletDb(req.body);
   newWallet
     .save()
@@ -21,7 +19,7 @@ const fetchAllWallets = async (req, res) => {
   logger.debug('fetchAllWallets method started.');
   WalletDb.find(function(err, wallets) {
     if (err) {
-      console.log(err);
+      logger.error(err);
     } else {
       res.json(wallets);
     }

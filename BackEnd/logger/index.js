@@ -1,9 +1,5 @@
 const { createLogger, format, transports } = require('winston');
 require('winston-daily-rotate-file');
-
-// const env = process.env.NODE_ENV || 'development';
-// console.log(env);
-
 /**
  * Remember to configure the timezone on the VM that is running the server, otherwise logs recorded will display incorrect date and time
  * Run 'timedatectl' to check timezone on VM

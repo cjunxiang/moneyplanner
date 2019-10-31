@@ -65,27 +65,7 @@ export default class UserDropDown extends React.Component {
     );
   };
 
-  setWalletTarget = async () => {
-    // request.post(
-    //   '/wallet/editWalletByWalletId/:id',
-    //   {
-    //     json: {
-    //       WalletName,
-    //       UserId,
-    //       TargetSum,
-    //       TotalSum,
-    //       Currency,
-    //       Active
-    //     }
-    //   },
-    //   (error, res, body) => {
-    //     if (error) {
-    //       console.log(`Error ${error}`);
-    //     }
-    //     // console.log(res.body);
-    //   }
-    // );
-  };
+  setWalletTarget = async () => {};
 
   setWalletSum = async () => {};
 
