@@ -167,6 +167,9 @@ export default class Dashboard extends React.Component {
   }
 
   componentDidMount = () => {
+    this.setState({
+      isFetchingData: true
+    });
     this.fetchAllData();
   };
   componentDidUpdate = (prevProps, prevState) => {};
@@ -179,9 +182,9 @@ export default class Dashboard extends React.Component {
   fetchAllData = async () => {
     this.getWalletDetails();
     this.getEventsDetails();
-    this.setState({
-      isFetchingData: false
-    });
+    // this.setState({
+    //   isFetchingData: false
+    // });
   };
 
   getWalletDetails = () => {

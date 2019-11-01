@@ -33,11 +33,15 @@ const fetchWalletByWalletId = async (req, res) => {
   });
 };
 
-//TODO: not done
 const fetchAllWalletsByUserId = async (req, res) => {
-  logger.debug('fetchAllWalletsByUserId method started.');
-  WalletDb.findById(req.params.id, function(err, wallet) {
-    res.json(wallet);
+  logger.debug('fetchAllWalletByUserId method started.');
+  const UserId = req.params.id;
+  WalletDb.find({ UserId: UserId }, function(err, wallets) {
+    if (err) {
+      logger.error(err);
+    } else {
+      res.json(wallets);
+    }
   });
 };
 

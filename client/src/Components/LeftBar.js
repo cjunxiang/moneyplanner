@@ -1,20 +1,18 @@
 import React from 'react';
 
 import { makeStyles, useTheme } from '@material-ui/core/styles';
-
+import styled from 'styled-components';
 import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
 
-const drawerWidth = 240;
+const drawerWidth = 50;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -71,6 +69,15 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 0
   }
 }));
+const StyledIconButton = styled(IconButton)`
+  position: absolute;
+  opacity: 0.6;
+  &:hover {
+    opacity: 1;
+    transform: rotate(360deg);
+    transition: transform 0.5s, opacity 0.5s;
+  }
+`;
 
 export default class LeftBar extends React.Component {
   constructor(props) {
@@ -78,15 +85,45 @@ export default class LeftBar extends React.Component {
     this.state = {
       classes: useStyles,
       theme: useTheme,
-      wallets: ['Wallet 1', 'Wallet 2', 'Wallet 3', 'Wallet 4']
+      walletsArray: []
     };
   }
 
-  componentDidMount = () => {};
+  componentDidMount = () => {
+    this.updateWalletArray();
+  };
+
+  componentDidUpdate = prevProps => {
+    const { wallets: oldwallets } = prevProps;
+    const { wallets: newwallets } = this.props;
+    oldwallets !== newwallets && this.updateWalletArray();
+  };
+
+  updateWalletArray = () => {
+    const { wallets } = this.props;
+    const walletsArray = Object.keys(wallets).map(i => {
+      return wallets[i];
+    });
+    this.setState({
+      walletsArray: walletsArray
+    });
+  };
 
   render() {
     const { isLeftBarOpen, handleDrawerOpen } = this.props;
-    const { wallets, classes, theme } = this.state;
+    const { classes, walletsArray } = this.state;
+
+    const populatedWallets = walletsArray.map((wallet, index) => {
+      return (
+        <ListItem button key={wallet.WalletName}>
+          <ListItemIcon>
+            <InboxIcon />
+          </ListItemIcon>
+          <ListItemText primary={wallet.WalletName} />
+        </ListItem>
+      );
+    });
+
     return (
       <Drawer
         className={classes.drawer}
@@ -98,25 +135,12 @@ export default class LeftBar extends React.Component {
         }}
       >
         <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerOpen}>
-            {theme.direction === 'ltr' ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
+          <StyledIconButton onClick={handleDrawerOpen}>
+            <ChevronLeftIcon />
+          </StyledIconButton>
         </div>
         <Divider />
-        <List>
-          {wallets.map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>
-                {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-              </ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+        <List>{populatedWallets}</List>
         <Divider />
       </Drawer>
     );

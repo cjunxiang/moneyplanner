@@ -21,6 +21,10 @@ router.post('/event/deleteEventByEventId/:id', event.deleteEventByEventId);
  */
 router.post('/wallet/addNewWalletToDatabase', wallet.AddNewWalletToDatabase);
 router.post('/wallet/fetchAllWallets', wallet.fetchAllWallets);
+router.post(
+  '/wallet/fetchAllWalletByUserId/:id',
+  wallet.fetchAllWalletsByUserId
+);
 router.post('/wallet/fetchWalletByWalletId/:id', wallet.fetchWalletByWalletId);
 router.post(
   '/wallet/fetchAllWalletsByUserId/:id',

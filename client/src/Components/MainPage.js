@@ -7,7 +7,7 @@ import UserDropDown from './UserDropDown';
 import AddNewExpenditurePopUp from './AddNewExpenditurePopUp.js';
 import moment from 'moment';
 import addDays from 'date-fns/addDays';
-
+const request = require('request');
 const MainPageContainer = styled.div`
   font-family: comfortaa, serif;
 `;
@@ -66,9 +66,22 @@ export default class MainPage extends React.Component {
 
   componentDidMount = () => {
     //this.getUserId();
-    //fetchAllWallets;
+    this.fetchAllWallets();
   };
-
+  fetchAllWallets = async () => {
+    const { userId } = this.state;
+    let urlToPost =
+      'http://localhost:4000/api/wallet/fetchAllWalletByUserId/' + userId;
+    request.post(urlToPost, {}, (error, res, body) => {
+      if (error) {
+        console.log(`Error ${error}`);
+      }
+      let dataObject = JSON.parse(res.body);
+      this.setState({
+        wallets: dataObject
+      });
+    });
+  };
   parseDateIntoString = date => {
     return moment(date).format('Do MMM dddd h:mm a');
   };
@@ -129,7 +142,6 @@ export default class MainPage extends React.Component {
           wallets={wallets}
           isLeftBarOpen={isLeftBarOpen}
           handleDrawerOpen={this.handleDrawerOpen}
-          isLeftBarOpen={isLeftBarOpen}
         />
         <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
