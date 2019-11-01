@@ -94,10 +94,10 @@ const MainSumText = styled.h1`
   cursor: pointer;
   opacity: 0.7;
   &:hover {
-    opacity: 1;
+    opacity: 0.9;
     font-weight: 600;
-    transform: scale(1.2, 1.2);
-    transition: transform 0.15s, opacity 2s;
+    transform: scale(1.02, 1.02);
+    transition: transform 0.1s, opacity 1s;
   }
 `;
 
