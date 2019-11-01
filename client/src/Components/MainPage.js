@@ -8,6 +8,7 @@ import AddNewExpenditurePopUp from './AddNewExpenditurePopUp.js';
 import moment from 'moment';
 import addDays from 'date-fns/addDays';
 const request = require('request');
+
 const MainPageContainer = styled.div`
   font-family: comfortaa, serif;
 `;
@@ -20,6 +21,12 @@ const StyledLeftBar = styled(LeftBar)`
   top: 0;
   z-index: 200;
 `;
+
+const DropDownGroup = styled.div`
+  width: 19vw;
+  min-width: 185px;
+`;
+
 const StyledDashboard = styled(Dashboard)`
   padding-top: 5%;
   position: absolute;
@@ -28,6 +35,8 @@ const StyledDashboard = styled(Dashboard)`
 const StyledTopBar = styled(TopBar)`
   z-index: 199;
   position: absolute;
+  width: 19vw;
+  min-width: 185px;
 `;
 
 const StyledUserDropDown = styled(UserDropDown)`
@@ -68,6 +77,21 @@ export default class MainPage extends React.Component {
     //this.getUserId();
     this.fetchAllWallets();
   };
+
+  componentWillMount = () => {
+    document.addEventListener('mousedown', this.handleClick);
+  };
+
+  componentWillUnmount = () => {
+    document.removeEventListener('mousedown', this.handleClick);
+  };
+
+  handleClick = e => {
+    if (!this.node.contains(e.target) && this.state.isDropDown === true) {
+      this.handleUserDropDown();
+    }
+  };
+
   fetchAllWallets = async () => {
     const { userId } = this.state;
     let urlToPost =
@@ -126,18 +150,22 @@ export default class MainPage extends React.Component {
       wallets
     } = this.state;
     return (
-      <MainPageContainer>
-        <StyledTopBar
-          userName={userName}
-          handleUserDropDown={this.handleUserDropDown}
-          handleDrawerOpen={this.handleDrawerOpen}
-        />
-        <StyledUserDropDown
-          activeWalletId={activeWalletId}
-          currency={currency}
-          handleUserDropDown={this.handleUserDropDown}
-          isDropDown={isDropDown}
-        />
+      <MainPageContainer id='mpc'>
+        <DropDownGroup id='ddg' ref={node => (this.node = node)}>
+          <StyledTopBar
+            id='topbar'
+            userName={userName}
+            isDropDown={isDropDown}
+            handleUserDropDown={this.handleUserDropDown}
+            handleDrawerOpen={this.handleDrawerOpen}
+          />
+          <StyledUserDropDown
+            activeWalletId={activeWalletId}
+            currency={currency}
+            handleUserDropDown={this.handleUserDropDown}
+            isDropDown={isDropDown}
+          />
+        </DropDownGroup>
         <StyledLeftBar
           wallets={wallets}
           isLeftBarOpen={isLeftBarOpen}

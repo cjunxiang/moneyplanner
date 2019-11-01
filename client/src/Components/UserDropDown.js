@@ -16,7 +16,7 @@ const request = require('request');
 const Container = styled.div`
   z-index: 199;
   position: absolute;
-  padding-left: 59px;
+  left: 59px;
   padding-right: 3%;
   width: 80vw;
   max-width: 300px;

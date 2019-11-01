@@ -3,10 +3,12 @@ import styled from 'styled-components';
 import UserGroup from './Subcomponents/UserGroup';
 
 const Container = styled.div`
-  height: 50px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  height: 5vh;
+  min-height: 43px;
+  width: 19vw;
+  min-width: 185px;
 `;
+
 const TopBarLeft = styled.div``;
 const TopBarRight = styled.div``;
 
