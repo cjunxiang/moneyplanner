@@ -12,9 +12,6 @@ let Wallet = new Schema({
   TargetSum: {
     type: Number
   },
-  TotalSum: {
-    type: Number
-  },
   Currency: {
     type: String
   },

@@ -20,16 +20,19 @@ const Container = styled.div`
   padding-right: 3%;
   width: 80vw;
   max-width: 300px;
+
   display: ${({ isDropDown }) => (isDropDown ? 'block' : 'none')} !important;
   opacity: ${({ isDropDown }) => (isDropDown ? 1 : 0)} !important;
-  &:hover {
-    transition: opacity 1s linear;
-  }
 `;
 //#eceaea
 const StyledList = styled(List)`
   background: #f9f9f9;
   border-radius: 10px;
+  opacity: 0.6;
+  &:hover {
+    opacity: 1;
+    transition: opacity 0.05s linear;
+  }
 `;
 export default class UserDropDown extends React.Component {
   constructor(props) {
@@ -53,7 +56,6 @@ export default class UserDropDown extends React.Component {
       {
         json: {
           WalletId: 12,
-          InflowOrOutFlow: 0,
           Type: 'food',
           Name: 'uber',
           Price: 13,

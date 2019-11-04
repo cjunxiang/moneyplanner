@@ -63,6 +63,15 @@ export default class MainPage extends React.Component {
       userId: 1,
       wallets: {},
       activeWalletId: '5db67f8643ac58b93992ca14',
+      activeWallet: {
+        _id: '5db68b8210f659386021e1f0',
+        WalletName: 'Wallet1',
+        UserId: 1,
+        TargetSum: 1,
+        Currency: 'SGD',
+        Active: true,
+        __v: 0
+      },
       currency: 'SGD$',
       userIcon: '',
       isDropDown: false,
@@ -147,7 +156,8 @@ export default class MainPage extends React.Component {
       isLeftBarOpen,
       activeWalletId,
       currency,
-      wallets
+      wallets,
+      activeWallet
     } = this.state;
     return (
       <MainPageContainer id='mpc'>
@@ -174,13 +184,13 @@ export default class MainPage extends React.Component {
         <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
           updateStartEndDates={this.updateStartEndDates}
-          activeWalletId={activeWalletId}
           currency={currency}
+          activeWallet={activeWallet}
         />
         {isAddItem && (
           <div>
             <AddNewExpenditurePopUp
-              activeWalletId={activeWalletId}
+              activeWallet={activeWallet}
               handleAddNewItem={this.handleAddNewItem}
             />
             <ShadeOver onClick={this.handleAddNewItem} />

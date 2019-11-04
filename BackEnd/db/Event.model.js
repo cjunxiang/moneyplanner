@@ -5,9 +5,6 @@ let Event = new Schema({
   WalletId: {
     type: String
   },
-  InflowOrOutFlow: {
-    type: Number
-  },
   Type: {
     type: String
   },

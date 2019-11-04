@@ -53,7 +53,6 @@ const editWalletByWalletId = async (req, res) => {
       updatedWallet.WalletName = req.body.WalletName;
       updatedWallet.UserId = req.body.UserId;
       updatedWallet.TargetSum = req.body.TargetSum;
-      updatedWallet.TotalSum = req.body.TotalSum;
       updatedWallet.Currency = req.body.Currency;
       updatedWallet.Active = req.body.Active;
     }

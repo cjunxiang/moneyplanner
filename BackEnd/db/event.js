@@ -1,9 +1,7 @@
-/**
- * ROUTES: Wallet
- */
 const express = require('express');
 const logger = require('../logger/index.js');
 const EventDb = require('./Event.model');
+const WalletDb = require('./Wallet.model');
 
 const AddNewEventToDatabase = async (req, res) => {
   logger.debug('AddNewEvent method started.');
@@ -51,7 +49,6 @@ const editEventByEventId = async (req, res) => {
     if (!updatedEvent) res.status(404).send('data is not found');
     else {
       updatedEvent.WalletId = req.body.WalletId;
-      updatedEvent.InflowOrOutFlow = req.body.InflowOrOutFlow;
       updatedEvent.Type = req.body.Type;
       updatedEvent.Name = req.body.Name;
       updatedEvent.Price = req.body.Price;
