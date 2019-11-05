@@ -82,9 +82,6 @@ export default class MainPage extends React.Component {
   componentDidMount = () => {
     //this.getUserId();
     this.fetchAllWallets();
-  };
-
-  componentWillMount = () => {
     document.addEventListener('mousedown', this.handleClick);
   };
 
