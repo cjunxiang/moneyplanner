@@ -2,10 +2,12 @@ import React from 'react';
 import styled from 'styled-components';
 import { forwardRef } from 'react';
 import MaterialTable from 'material-table';
-import { DateRangePicker } from 'react-date-range';
 import Fab from '@material-ui/core/Fab';
 import Button from '@material-ui/core/Button';
 import Tooltip from '@material-ui/core/Tooltip';
+import { DateRangePicker } from 'react-date-range';
+// import enGb from 'react-date-range/dist/locale/en-GB';
+import { addDays } from 'date-fns';
 
 import {
   Add,
@@ -28,10 +30,15 @@ import {
   VisibilityOff
 } from '@material-ui/icons';
 import Loading from './Reusable/Loading';
+import CloseButton from './Reusable/CloseButton';
 import 'react-date-range/dist/styles.css'; // main style file
 import 'react-date-range/dist/theme/default.css'; // theme css file
-
 const request = require('request');
+
+const StyledCloseButton = styled(CloseButton)`
+  right: 0;
+`;
+
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
   Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -96,7 +103,7 @@ const MainSumText = styled.h1`
   &:hover {
     opacity: 0.9;
     font-weight: 600;
-    transform: scale(1.02, 1.02);
+    transform: scale(1.01, 1.01);
     transition: transform 0.1s, opacity 1s;
   }
 `;
@@ -104,11 +111,23 @@ const MainSumText = styled.h1`
 const StyledVisibilityOffIcon = styled(VisibilityOff)`
   width: 50px !important;
   height: 50px !important;
+  opacity: 0.3;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+    transition: opacity 0.1s linear;
+  }
 `;
 
 const StyledVisibilityIcon = styled(Visibility)`
   width: 50px !important;
   height: 50px !important;
+  opacity: 0.3;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+    transition: opacity 0.1s linear;
+  }
 `;
 
 const ShadeOver = styled.div`
@@ -144,17 +163,20 @@ export default class Dashboard extends React.Component {
     super(props);
     this.state = {
       currency: 'SGD$',
+      dateRangePicker: {
+        selection: {
+          endDate: new Date(),
+          startDate: addDays(new Date(), -7),
+          key: 'selection'
+        }
+      },
       totalSum: 0,
       totalSpent: 0,
       goalSum: 0,
       isShowSum: true,
       isShowTable: false,
       isFetchingData: true,
-      selectionRange: {
-        startDate: new Date(),
-        endDate: new Date(),
-        key: 'selection'
-      },
+      focusedRange: [0, 0],
       data: [],
       columns: [
         { title: 'Type', field: 'Type' },
@@ -173,73 +195,87 @@ export default class Dashboard extends React.Component {
     this.fetchAllData();
   };
   componentDidUpdate = (prevProps, prevState) => {};
-  /**
-   * Fetch all Data does:
-   * Fetch all expenditures based on wallet. (Currently fetch all wallet in DB)
-   * Calculate Wallet total remaining $$
-   * Calculate Target & Current difference
-   */
+
   fetchAllData = async () => {
     this.getWalletDetails();
     this.getEventsDetails();
-    // this.setState({
-    //   isFetchingData: false
-    // });
   };
 
   getWalletDetails = () => {
-    const { activeWalletId } = this.props;
+    const { activeWallet } = this.props;
     let urlToPost =
       'http://localhost:4000/api/wallet/fetchWalletByWalletId/' +
-      activeWalletId;
+      activeWallet.WalletId;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
         console.log(`Error ${error}`);
       }
       let dataObject = JSON.parse(res.body);
       this.setState({
-        totalSum: dataObject.TotalSum,
         goalSum: dataObject.TargetSum
       });
     });
   };
 
   getEventsDetails = () => {
-    const { activeWalletId } = this.props;
-    let urlToPost =
+    const { activeWallet } = this.props;
+    const { dateRangePicker } = this.state;
+    const startDateDate = new Date(dateRangePicker.selection.startDate);
+    const endDateDate = new Date(dateRangePicker.selection.endDate);
+
+    request.post(
       'http://localhost:4000/api/event/fetchAllEventByWalletId/' +
-      activeWalletId;
-    request.post(urlToPost, {}, (error, res, body) => {
-      if (error) {
-        console.log(`Error ${error}`);
+        activeWallet.WalletId,
+      {},
+      (error, res, body) => {
+        if (error) {
+          console.log(`Error ${error}`);
+        }
+        let dataObject = JSON.parse(res.body);
+
+        let totalSum = 0;
+        let totalSpent = 0;
+        dataObject.forEach(data => {
+          console.log('count');
+          totalSum = totalSum + data.Price;
+          let dataObjectDate = new Date(data.Date);
+          if (dataObjectDate < endDateDate && dataObjectDate > startDateDate) {
+            console.log('in range');
+            totalSpent = totalSpent + data.Price;
+          }
+        });
+
+        this.setState({
+          data: dataObject,
+          totalSum: totalSum,
+          totalSpent: totalSpent,
+          isFetchingData: false
+        });
       }
-      let dataObject = JSON.parse(res.body);
-      let totalSpent = 0;
-      dataObject.forEach(data => {
-        totalSpent = totalSpent + data.Price;
-      });
-      this.setState({
-        data: dataObject,
-        totalSpent: -totalSpent,
-        isFetchingData: false
-      });
-    });
+    );
   };
 
-  handleSelectNewDateRange = ranges => {
+  parseDateToString = date => {
+    const currentDate = new Date(date);
+    return currentDate
+      .toLocaleDateString('en-SG', {
+        month: 'short',
+        day: 'numeric',
+        year: '2-digit'
+      })
+      .split(' ')
+      .join(' ');
+  };
+
+  handleConfirmSelectDates = async (which, payload) => {
     this.setState({
-      selectionRange: {
-        startDate: ranges.selection.startDate,
-        endDate: ranges.selection.endDate
+      isFetchingData: true,
+      [which]: {
+        ...this.state[which],
+        ...payload
       }
     });
-  };
-
-  handleConfirmSelectDates = () => {
-    const { updateStartEndDates } = this.props;
-    const { selectionRange } = this.state;
-    this.handleSelectDateRange();
-    updateStartEndDates(selectionRange.startDate, selectionRange.endDate);
+    this.getEventsDetails();
   };
 
   handleIsShowTable = () => {
@@ -266,8 +302,7 @@ export default class Dashboard extends React.Component {
       {
         json: {
           ...newData,
-          InflowOrOutFlow: 0,
-          WalletId: this.props.activeWalletId,
+          WalletId: this.props.activeWallet.WalletId,
           Price: parseInt(newData.Price)
         }
       },
@@ -275,7 +310,6 @@ export default class Dashboard extends React.Component {
         if (error) {
           console.log(`Error ${error}`);
         }
-
         this.getEventsDetails();
       }
     );
@@ -290,9 +324,8 @@ export default class Dashboard extends React.Component {
       {
         json: {
           ...newData,
-          WalletId: this.props.activeWalletId,
-          Price: parseInt(newData.Price),
-          InflowOrOutFlow: 0
+          WalletId: this.props.activeWallet.WalletId,
+          Price: parseInt(newData.Price)
         }
       },
       (error, res, body) => {
@@ -335,15 +368,14 @@ export default class Dashboard extends React.Component {
     const {
       columns,
       data,
-      selectionRange,
       isSelectDate,
       isShowTable,
       totalSum,
-
       goalSum,
       isShowSum,
       totalSpent,
-      isFetchingData
+      isFetchingData,
+      focusedRange
     } = this.state;
     const { handleAddNewItem, currency } = this.props;
 
@@ -353,30 +385,52 @@ export default class Dashboard extends React.Component {
         {!isFetchingData && (
           <div>
             <MainDetailsContainer>
-              Total Spent
+              Total Spent in time period
               {isShowSum && (
                 <div>
-                  <StyledVisibilityIcon onClick={this.handleIsShowSum} />
-                  <MainSumText>
-                    <p onClick={this.handleIsShowTable}>
-                      {currency}
-                      {totalSpent}
-                    </p>
-                  </MainSumText>
+                  <Tooltip isShowTable={isShowTable} title='Show/Hide Details'>
+                    <MainSumText>
+                      <p onClick={this.handleIsShowTable}>
+                        {currency}
+                        {totalSpent}
+                      </p>
+                    </MainSumText>
+                  </Tooltip>
                   Total Sum In Wallet: {totalSum}
                   <br />
-                  Goal is: {goalSum} ({this.getSumDifference()})
+                  {this.parseDateToString(
+                    this.state.dateRangePicker.selection.startDate
+                  )}{' '}
+                  -{' '}
+                  {this.parseDateToString(
+                    this.state.dateRangePicker.selection.endDate
+                  )}
+                  <br />
+                  <Button
+                    variant='contained'
+                    size='small'
+                    onClick={this.handleSelectDateRange}
+                  >
+                    Select Date
+                  </Button>
+                  <br />
+                  Goal is: {this.getSumDifference()}
+                  <br />
+                  <Tooltip title='Hide what hide, alot of money meh?'>
+                    <StyledVisibilityIcon onClick={this.handleIsShowSum} />
+                  </Tooltip>
                 </div>
               )}
               {!isShowSum && (
                 <div>
-                  <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
                   <MainSumText>
                     <p onClick={this.handleIsShowTable}>{currency} &nbsp;***</p>
                   </MainSumText>
                   Total Sum In Wallet: {this.state.totalSum}
                   <br />
-                  Goal is: {goalSum} ({this.getSumDifference()}){' '}
+                  Goal is: {goalSum} ({this.getSumDifference()})
+                  <br />
+                  <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
                 </div>
               )}
               <Tooltip title='Spend again ah?'>
@@ -435,38 +489,38 @@ export default class Dashboard extends React.Component {
                   }}
                   icons={tableIcons}
                 />
-                <Button
-                  variant='contained'
-                  color='primary'
-                  size='small'
-                  startIcon={<AddBox />}
-                  onClick={this.handleSelectDateRange}
-                >
-                  Select Date
-                </Button>
               </TableContainer>
             )}
             {isSelectDate && (
               <div>
-                <ShadeOver onClick={this.handleConfirmSelectDates} />
+                <ShadeOver onClick={this.handleSelectDateRange} />
                 <DateRangeContainer>
+                  <div onClick={this.handleSelectDateRange}>
+                    <StyledCloseButton />
+                  </div>
                   <strong>Select Date Range</strong>
+
                   <br />
                   <DateRangePicker
-                    ranges={[selectionRange]}
-                    onChange={this.handleSelectNewDateRange}
+                    onChange={this.handleConfirmSelectDates.bind(
+                      this,
+                      'dateRangePicker'
+                    )}
+                    showSelectionPreview={true}
+                    moveRangeOnFirstSelection={false}
+                    months={1}
+                    ranges={[this.state.dateRangePicker.selection]}
                     maxDate={new Date()}
+                    focusedRange={focusedRange}
+                    onRangeFocusChange={focusedRange => {
+                      const [, rangeStep] = focusedRange;
+                      if (!rangeStep) {
+                        this.handleSelectDateRange();
+                      }
+                      this.setState({ focusedRange });
+                    }}
                   />
                   <br />
-                  <Button
-                    variant='contained'
-                    color='primary'
-                    size='small'
-                    startIcon={<AddBox />}
-                    onClick={this.handleConfirmSelectDates}
-                  >
-                    confirm
-                  </Button>
                 </DateRangeContainer>
               </div>
             )}
