@@ -115,7 +115,7 @@ export default class LeftBar extends React.Component {
 
     const populatedWallets = walletsArray.map((wallet, index) => {
       return (
-        <ListItem button>
+        <ListItem button key={wallet._id}>
           <ListItemIcon>
             <InboxIcon />
           </ListItemIcon>
