@@ -172,6 +172,8 @@ export default class Dashboard extends React.Component {
       },
       totalSum: 0,
       totalSpent: 0,
+      netIn: 0,
+      netOut: 0,
       goalSum: 0,
       isShowSum: true,
       isShowTable: false,
@@ -217,7 +219,7 @@ export default class Dashboard extends React.Component {
     });
   };
 
-  getEventsDetails = () => {
+  getEventsDetails = async () => {
     const { activeWallet } = this.props;
     const { dateRangePicker } = this.state;
     const startDateDate = new Date(dateRangePicker.selection.startDate);
@@ -235,13 +237,18 @@ export default class Dashboard extends React.Component {
 
         let totalSum = 0;
         let totalSpent = 0;
+        let netIn = 0;
+        let netOut = 0;
         dataObject.forEach(data => {
-          console.log('count');
           totalSum = totalSum + data.Price;
           let dataObjectDate = new Date(data.Date);
           if (dataObjectDate < endDateDate && dataObjectDate > startDateDate) {
-            console.log('in range');
             totalSpent = totalSpent + data.Price;
+            if (data.Price > 0) {
+              netIn = netIn + data.Price;
+            } else {
+              netOut = netOut + data.Price;
+            }
           }
         });
 
@@ -249,7 +256,9 @@ export default class Dashboard extends React.Component {
           data: dataObject,
           totalSum: totalSum,
           totalSpent: totalSpent,
-          isFetchingData: false
+          isFetchingData: false,
+          netIn: netIn,
+          netOut: netOut
         });
       }
     );
@@ -268,7 +277,7 @@ export default class Dashboard extends React.Component {
   };
 
   handleConfirmSelectDates = async (which, payload) => {
-    this.setState({
+    await this.setState({
       isFetchingData: true,
       [which]: {
         ...this.state[which],
@@ -375,7 +384,9 @@ export default class Dashboard extends React.Component {
       isShowSum,
       totalSpent,
       isFetchingData,
-      focusedRange
+      focusedRange,
+      netIn,
+      netOut
     } = this.state;
     const { handleAddNewItem, currency } = this.props;
 
@@ -396,6 +407,11 @@ export default class Dashboard extends React.Component {
                       </p>
                     </MainSumText>
                   </Tooltip>
+                  <br />
+                  Income: {netIn}
+                  <br />
+                  Spent: {netOut}
+                  <br />
                   Total Sum In Wallet: {totalSum}
                   <br />
                   {this.parseDateToString(
