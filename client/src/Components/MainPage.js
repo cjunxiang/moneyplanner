@@ -6,7 +6,6 @@ import LeftBar from './LeftBar';
 import UserDropDown from './UserDropDown';
 import AddNewExpenditurePopUp from './AddNewExpenditurePopUp.js';
 import moment from 'moment';
-import addDays from 'date-fns/addDays';
 const request = require('request');
 
 const MainPageContainer = styled.div`
@@ -62,9 +61,9 @@ export default class MainPage extends React.Component {
       userName: 'C.Junxiang',
       userId: 1,
       wallets: {},
-      activeWalletId: '5db67f8643ac58b93992ca14',
+      activeWalletId: '5db68b8210f659386021e1f0',
       activeWallet: {
-        _id: '5db68b8210f659386021e1f0',
+        WalletId: '5db68b8210f659386021e1f0',
         WalletName: 'Wallet1',
         UserId: 1,
         TargetSum: 1,
@@ -76,9 +75,7 @@ export default class MainPage extends React.Component {
       userIcon: '',
       isDropDown: false,
       isAddItem: false,
-      isLeftBarOpen: false,
-      startDate: new Date(),
-      endDate: addDays(new Date(), -7)
+      isLeftBarOpen: false
     };
   }
 
@@ -120,12 +117,6 @@ export default class MainPage extends React.Component {
   };
   parseSumWithComma = number => {
     return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-  };
-  updateStartEndDates = (startDate, endDate) => {
-    this.setState({
-      startDate: startDate,
-      endDate: endDate
-    });
   };
 
   handleUserDropDown = () => {
@@ -183,7 +174,6 @@ export default class MainPage extends React.Component {
         />
         <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
-          updateStartEndDates={this.updateStartEndDates}
           currency={currency}
           activeWallet={activeWallet}
         />
