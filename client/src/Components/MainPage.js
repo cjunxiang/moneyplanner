@@ -44,8 +44,8 @@ const StyledUserDropDown = styled(UserDropDown)`
 
 const ShadeOver = styled.div`
   z-index: 200;
-  width: 100%;
-  height: 100%;
+  width: 200%;
+  height: 200%;
   top: 0;
   background: #123456;
   position: absolute;

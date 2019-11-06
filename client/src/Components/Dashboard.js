@@ -132,8 +132,8 @@ const StyledVisibilityIcon = styled(Visibility)`
 
 const ShadeOver = styled.div`
   z-index: 200;
-  width: 100%;
-  height: 100%;
+  width: 200%;
+  height: 200%;
   top: 0;
   left: 0;
   background: #123456;
@@ -380,7 +380,6 @@ export default class Dashboard extends React.Component {
       isSelectDate,
       isShowTable,
       totalSum,
-      goalSum,
       isShowSum,
       totalSpent,
       isFetchingData,
@@ -396,17 +395,20 @@ export default class Dashboard extends React.Component {
         {!isFetchingData && (
           <div>
             <MainDetailsContainer>
-              Total Spent in time period
+              Net Spending
               {isShowSum && (
                 <div>
-                  <Tooltip isShowTable={isShowTable} title='Show/Hide Details'>
-                    <MainSumText>
+                  <MainSumText>
+                    <Tooltip
+                      isShowTable={isShowTable}
+                      title='Show/Hide Details'
+                    >
                       <p onClick={this.handleIsShowTable}>
                         {currency}
                         {totalSpent}
                       </p>
-                    </MainSumText>
-                  </Tooltip>
+                    </Tooltip>
+                  </MainSumText>
                   <br />
                   Income: {netIn}
                   <br />
@@ -442,10 +444,6 @@ export default class Dashboard extends React.Component {
                   <MainSumText>
                     <p onClick={this.handleIsShowTable}>{currency} &nbsp;***</p>
                   </MainSumText>
-                  Total Sum In Wallet: {this.state.totalSum}
-                  <br />
-                  Goal is: {goalSum} ({this.getSumDifference()})
-                  <br />
                   <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
                 </div>
               )}
