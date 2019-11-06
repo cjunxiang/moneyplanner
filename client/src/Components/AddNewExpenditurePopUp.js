@@ -12,6 +12,9 @@ import IncomeForm from './Subcomponents/IncomeForm';
 import ExpenditureForm from './Subcomponents/ExpenditureForm';
 import CloseButton from './Reusable/CloseButton';
 
+import 'react-date-range/dist/styles.css'; // main style file
+import 'react-date-range/dist/theme/default.css'; // theme css file
+
 const Container = styled.div`
   z-index: 201;
   position: absolute;
@@ -135,34 +138,18 @@ export default class AddNewExpenditurePopUp extends React.Component {
               </Grid>
             </Grid>
             <br />
-            {isMoneyIn && (
-              <IncomeForm
-                type={type}
-                handleTypeChange={this.handleTypeChange}
-                name={name}
-                handleNameChange={this.handleNameChange}
-                amount={amount}
-                handleAmountChange={this.handleAmountChange}
-                date={date}
-                handleDateChange={this.handleDateChange}
-                remarks={remarks}
-                handleRemarksChange={this.handleRemarksChange}
-              />
-            )}
-            {!isMoneyIn && (
-              <ExpenditureForm
-                type={type}
-                handleTypeChange={this.handleTypeChange}
-                name={name}
-                handleNameChange={this.handleNameChange}
-                amount={amount}
-                handleAmountChange={this.handleAmountChange}
-                date={date}
-                handleDateChange={this.handleDateChange}
-                remarks={remarks}
-                handleRemarksChange={this.handleRemarksChange}
-              />
-            )}
+            <IncomeForm
+              type={type}
+              handleTypeChange={this.handleTypeChange}
+              name={name}
+              handleNameChange={this.handleNameChange}
+              amount={amount}
+              handleAmountChange={this.handleAmountChange}
+              date={date}
+              handleDateChange={this.handleDateChange}
+              remarks={remarks}
+              handleRemarksChange={this.handleRemarksChange}
+            />
           </CardContent>
 
           <CardActions>
