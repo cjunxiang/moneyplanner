@@ -12,6 +12,12 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import TextField from '@material-ui/core/TextField';
+import Paper from '@material-ui/core/Paper';
+import Select from '@material-ui/core/Select';
+import MenuItem from '@material-ui/core/MenuItem';
+import currencyList from './Reusable/Constant.js';
+import InputLabel from '@material-ui/core/InputLabel';
 
 const drawerWidth = 50;
 const request = require('request');
@@ -71,6 +77,7 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 0
   }
 }));
+
 const StyledIconButton = styled(IconButton)`
   position: absolute;
   opacity: 0.6;
@@ -87,12 +94,20 @@ export default class LeftBar extends React.Component {
     this.state = {
       classes: useStyles,
       theme: useTheme,
-      walletsArray: []
+      walletsArray: [],
+      currencyArray: [],
+      isCreateNewWallet: true,
+      isSelectCurrency: false,
+      newWalletName: '',
+      newWalletCurrency: '',
+      newWalletTargetSum: 0,
+      newWalletTotalSum: 0
     };
   }
 
   componentDidMount = () => {
     this.updateWalletArray();
+    this.updateCurrencyArray();
   };
 
   componentDidUpdate = prevProps => {
@@ -103,11 +118,23 @@ export default class LeftBar extends React.Component {
 
   updateWalletArray = () => {
     const { wallets } = this.props;
-    const walletsArray = Object.keys(wallets).map(i => {
-      return wallets[i];
+    const walletsArray = Object.keys(wallets).map(index => {
+      return wallets[index];
     });
     this.setState({
       walletsArray: walletsArray
+    });
+  };
+  updateCurrencyArray = () => {
+    Object.keys(currencyList).forEach(index => {
+      this.setState({
+        currencyArray: currencyList[index]
+      });
+    });
+  };
+  handleIsCreateNewWallet = () => {
+    this.setState({
+      isCreateNewWallet: !this.state.isCreateNewWallet
     });
   };
 
@@ -117,14 +144,20 @@ export default class LeftBar extends React.Component {
 
   handleCreateNewWallet = () => {
     const { userId } = this.props;
+    const {
+      newWalletName,
+      newWalletCurrency,
+      newWalletTargetSum,
+      newWalletTotalSum
+    } = this.state;
     request.post(
       'http://localhost:4000/api/wallet/addNewWalletToDatabase',
       {
         json: {
-          WalletName: 'Wallet New',
+          WalletName: newWalletName,
           UserId: userId,
-          TargetSum: 999,
-          Currency: 'CNY',
+          TargetSum: newWalletTargetSum,
+          Currency: newWalletCurrency,
           Active: true
         }
       },
@@ -132,15 +165,55 @@ export default class LeftBar extends React.Component {
         if (error) {
           console.log(`Error ${error}`);
         } else {
+          console.log(res.body);
+          console.log(res.body.wallet);
+          console.log(res.body.wallet._id);
           this.props.fetchAllWallets();
         }
       }
     );
   };
 
+  handleIsSelectCurrency = () => {
+    this.setState({
+      isSelectCurrency: !this.state.isSelectCurrency
+    });
+  };
+
+  handleSelectCurrency = e => {
+    this.setState({
+      newWalletCurrency: e.target.value
+    });
+  };
+
+  handleNewCurrentSum = e => {
+    this.setState({
+      newWalletTotalSum: e.target.value
+    });
+  };
+
+  handleNewName = e => {
+    this.setState({
+      newWalletName: e.target.value
+    });
+  };
+
+  handleNewTargetSum = e => {
+    this.setState({
+      newWalletTargetSum: e.target.value
+    });
+  };
+
   render() {
     const { isLeftBarOpen, handleDrawerOpen } = this.props;
-    const { classes, walletsArray } = this.state;
+    const {
+      classes,
+      walletsArray,
+      currencyArray,
+      isCreateNewWallet,
+      isSelectCurrency,
+      newWalletCurrency
+    } = this.state;
 
     return (
       <Drawer
@@ -175,9 +248,71 @@ export default class LeftBar extends React.Component {
           })}
         </List>
         <Divider />
-        <Button onClick={this.handleCreateNewWallet} variant='outlined'>
-          New Wallet
-        </Button>
+        {!isCreateNewWallet && (
+          <Button variant='outlined' onClick={this.handleIsCreateNewWallet}>
+            New Wallet
+          </Button>
+        )}
+        {isCreateNewWallet && (
+          <div>
+            <p onClick={this.handleIsCreateNewWallet}>X</p>
+            <Paper>
+              <React.Fragment>
+                <TextField
+                  type='Wallet Name?'
+                  variant='outlined'
+                  margin='dense'
+                  required
+                  fullWidth
+                  label='wallet name'
+                  onChange={this.handleNewName}
+                />
+                <TextField
+                  type='Current Sum?'
+                  variant='outlined'
+                  margin='dense'
+                  required
+                  fullWidth
+                  label='current sum'
+                  onChange={this.handleNewCurrentSum}
+                />
+                <TextField
+                  type='Target Sum?'
+                  variant='outlined'
+                  margin='dense'
+                  required
+                  fullWidth
+                  label='target sum'
+                  onChange={this.handleNewTargetSum}
+                  // helperText={!isMatch && 'Password does not match'}
+                  // error={!isMatch}
+                />
+                <InputLabel shrink>Currency</InputLabel>
+                <Select
+                  open={isSelectCurrency}
+                  onClose={this.handleIsSelectCurrency}
+                  onOpen={this.handleIsSelectCurrency}
+                  value={newWalletCurrency}
+                  onChange={this.handleSelectCurrency}
+                  autoWidth
+                >
+                  {currencyArray.map(currency => (
+                    <MenuItem value={currency}>{currency}</MenuItem>
+                  ))}
+                </Select>
+                <Button
+                  type='submit'
+                  fullWidth
+                  variant='contained'
+                  color='primary'
+                  onClick={this.handleCreateNewWallet}
+                >
+                  Create Wallet
+                </Button>
+              </React.Fragment>
+            </Paper>
+          </div>
+        )}
       </Drawer>
     );
   }

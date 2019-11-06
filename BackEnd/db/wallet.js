@@ -8,7 +8,9 @@ const AddNewWalletToDatabase = async (req, res) => {
   newWallet
     .save()
     .then(newWallet => {
-      res.status(200).json({ newWallet: 'newWallet added successfully' });
+      res
+        .status(200)
+        .json({ message: `newWallet added successfully`, wallet: newWallet });
     })
     .catch(err => {
       res.status(400).send('adding new newWallet failed');
