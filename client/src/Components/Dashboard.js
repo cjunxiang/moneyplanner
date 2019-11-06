@@ -162,7 +162,6 @@ export default class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currency: 'SGD$',
       dateRangePicker: {
         selection: {
           endDate: new Date(),
@@ -196,7 +195,11 @@ export default class Dashboard extends React.Component {
     });
     this.fetchAllData();
   };
-  componentDidUpdate = (prevProps, prevState) => {};
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevProps.activeWallet !== this.props.activeWallet) {
+      this.getEventsDetails();
+    }
+  };
 
   fetchAllData = async () => {
     this.getWalletDetails();
@@ -227,14 +230,13 @@ export default class Dashboard extends React.Component {
 
     request.post(
       'http://localhost:4000/api/event/fetchAllEventByWalletId/' +
-        activeWallet.WalletId,
+        activeWallet._id,
       {},
       (error, res, body) => {
         if (error) {
           console.log(`Error ${error}`);
         }
         let dataObject = JSON.parse(res.body);
-
         let totalSum = 0;
         let totalSpent = 0;
         let netIn = 0;
@@ -251,7 +253,6 @@ export default class Dashboard extends React.Component {
             }
           }
         });
-
         this.setState({
           data: dataObject,
           totalSum: totalSum,
@@ -387,7 +388,7 @@ export default class Dashboard extends React.Component {
       netIn,
       netOut
     } = this.state;
-    const { handleAddNewItem, currency } = this.props;
+    const { handleAddNewItem, activeWallet } = this.props;
 
     return (
       <Container>
@@ -404,7 +405,7 @@ export default class Dashboard extends React.Component {
                       title='Show/Hide Details'
                     >
                       <p onClick={this.handleIsShowTable}>
-                        {currency}
+                        {activeWallet.Currency}
                         {totalSpent}
                       </p>
                     </Tooltip>
@@ -442,7 +443,9 @@ export default class Dashboard extends React.Component {
               {!isShowSum && (
                 <div>
                   <MainSumText>
-                    <p onClick={this.handleIsShowTable}>{currency} &nbsp;***</p>
+                    <p onClick={this.handleIsShowTable}>
+                      {activeWallet.Currency} &nbsp;***
+                    </p>
                   </MainSumText>
                   <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
                 </div>

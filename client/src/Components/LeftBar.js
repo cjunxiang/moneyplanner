@@ -109,20 +109,13 @@ export default class LeftBar extends React.Component {
     });
   };
 
+  handleListItemClick = (event, wallet) => {
+    this.props.handleChangeActiveWallet(wallet);
+  };
+
   render() {
     const { isLeftBarOpen, handleDrawerOpen } = this.props;
     const { classes, walletsArray } = this.state;
-
-    const populatedWallets = walletsArray.map((wallet, index) => {
-      return (
-        <ListItem button key={wallet._id}>
-          <ListItemIcon>
-            <InboxIcon />
-          </ListItemIcon>
-          <ListItemText primary={wallet.WalletName} />
-        </ListItem>
-      );
-    });
 
     return (
       <Drawer
@@ -140,7 +133,22 @@ export default class LeftBar extends React.Component {
           </StyledIconButton>
         </div>
         <Divider />
-        <List>{populatedWallets}</List>
+        <List>
+          {walletsArray.map((wallet, index) => {
+            return (
+              <ListItem
+                button
+                key={wallet._id}
+                onClick={event => this.handleListItemClick(event, wallet)}
+              >
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary={wallet.WalletName} />
+              </ListItem>
+            );
+          })}
+        </List>
         <Divider />
       </Drawer>
     );

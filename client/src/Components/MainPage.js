@@ -61,9 +61,9 @@ export default class MainPage extends React.Component {
       userName: 'C.Junxiang',
       userId: 1,
       wallets: {},
-      activeWalletId: '5db68b8210f659386021e1f0',
+      currency: 'SGD$',
       activeWallet: {
-        WalletId: '5db68b8210f659386021e1f0',
+        _id: '5db68b8210f659386021e1f0',
         WalletName: 'Wallet1',
         UserId: 1,
         TargetSum: 1,
@@ -71,7 +71,6 @@ export default class MainPage extends React.Component {
         Active: true,
         __v: 0
       },
-      currency: 'SGD$',
       userIcon: '',
       isDropDown: false,
       isAddItem: false,
@@ -109,6 +108,7 @@ export default class MainPage extends React.Component {
       });
     });
   };
+
   parseDateIntoString = date => {
     return moment(date).format('Do MMM dddd h:mm a');
   };
@@ -136,14 +136,21 @@ export default class MainPage extends React.Component {
     });
   };
 
+  handleChangeActiveWallet = newWallet => {
+    if (newWallet !== this.state.activeWallet) {
+      this.setState({
+        activeWallet: newWallet,
+        currency: newWallet.Currency
+      });
+    }
+  };
+
   render() {
     const {
       userName,
       isDropDown,
       isAddItem,
       isLeftBarOpen,
-      activeWalletId,
-      currency,
       wallets,
       activeWallet
     } = this.state;
@@ -158,8 +165,6 @@ export default class MainPage extends React.Component {
             handleDrawerOpen={this.handleDrawerOpen}
           />
           <StyledUserDropDown
-            activeWalletId={activeWalletId}
-            currency={currency}
             handleUserDropDown={this.handleUserDropDown}
             isDropDown={isDropDown}
           />
@@ -168,10 +173,10 @@ export default class MainPage extends React.Component {
           wallets={wallets}
           isLeftBarOpen={isLeftBarOpen}
           handleDrawerOpen={this.handleDrawerOpen}
+          handleChangeActiveWallet={this.handleChangeActiveWallet}
         />
         <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
-          currency={currency}
           activeWallet={activeWallet}
         />
         {isAddItem && (
