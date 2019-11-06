@@ -6,6 +6,7 @@ import Drawer from '@material-ui/core/Drawer';
 import List from '@material-ui/core/List';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
+import Button from '@material-ui/core/Button';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -13,6 +14,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 
 const drawerWidth = 50;
+const request = require('request');
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -113,6 +115,29 @@ export default class LeftBar extends React.Component {
     this.props.handleChangeActiveWallet(wallet);
   };
 
+  handleCreateNewWallet = () => {
+    const { userId } = this.props;
+    request.post(
+      'http://localhost:4000/api/wallet/addNewWalletToDatabase',
+      {
+        json: {
+          WalletName: 'Wallet New',
+          UserId: userId,
+          TargetSum: 999,
+          Currency: 'CNY',
+          Active: true
+        }
+      },
+      (error, res, body) => {
+        if (error) {
+          console.log(`Error ${error}`);
+        } else {
+          this.props.fetchAllWallets();
+        }
+      }
+    );
+  };
+
   render() {
     const { isLeftBarOpen, handleDrawerOpen } = this.props;
     const { classes, walletsArray } = this.state;
@@ -150,6 +175,9 @@ export default class LeftBar extends React.Component {
           })}
         </List>
         <Divider />
+        <Button onClick={this.handleCreateNewWallet} variant='outlined'>
+          New Wallet
+        </Button>
       </Drawer>
     );
   }

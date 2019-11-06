@@ -152,7 +152,8 @@ export default class MainPage extends React.Component {
       isAddItem,
       isLeftBarOpen,
       wallets,
-      activeWallet
+      activeWallet,
+      userId
     } = this.state;
     return (
       <MainPageContainer id='mpc'>
@@ -174,6 +175,8 @@ export default class MainPage extends React.Component {
           isLeftBarOpen={isLeftBarOpen}
           handleDrawerOpen={this.handleDrawerOpen}
           handleChangeActiveWallet={this.handleChangeActiveWallet}
+          userId={userId}
+          fetchAllWallets={this.fetchAllWallets}
         />
         <StyledDashboard
           handleAddNewItem={this.handleAddNewItem}
