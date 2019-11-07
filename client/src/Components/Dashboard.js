@@ -210,7 +210,7 @@ export default class Dashboard extends React.Component {
     const { activeWallet } = this.props;
     let urlToPost =
       'http://localhost:4000/api/wallet/fetchWalletByWalletId/' +
-      activeWallet.WalletId;
+      activeWallet._id;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
         console.log(`Error ${error}`);

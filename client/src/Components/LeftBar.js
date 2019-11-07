@@ -12,12 +12,15 @@ import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
+import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded';
+import EditOutlinedIcon from '@material-ui/icons/EditOutlined';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import currencyList from './Reusable/Constant.js';
 import InputLabel from '@material-ui/core/InputLabel';
+import CloseButton from './Reusable/CloseButton';
 
 const drawerWidth = 50;
 const request = require('request');
@@ -78,6 +81,19 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+const ListItemContainer = styled.div`
+  width: 28vw;
+  min-width: 206px;
+  width: 100%;
+  opacity: 0.7;
+  &:hover {
+    opacity: 1;
+    font-weight: 600;
+    transform: scale(1.05, 1.05);
+    transition: transform 0.1, opacity 0.2s;
+  }
+`;
+
 const StyledIconButton = styled(IconButton)`
   position: absolute;
   opacity: 0.6;
@@ -85,6 +101,28 @@ const StyledIconButton = styled(IconButton)`
     opacity: 1;
     transform: rotate(360deg);
     transition: transform 0.5s, opacity 0.5s;
+  }
+`;
+
+const StyledListItemIcon = styled(ListItemIcon)`
+  flex-direction: row-reverse;
+`;
+
+const StyledDeleteIcon = styled(DeleteForeverRoundedIcon)`
+  opacity: 0.4;
+  &:hover {
+    opacity: 1;
+    transform: scale(1.01, 1.01);
+    transition: transform 0.1, opacity 0.2s;
+  }
+`;
+
+const StyledEditIcon = styled(EditOutlinedIcon)`
+  opacity: 0.4;
+  &:hover {
+    opacity: 1;
+    transform: scale(1.01, 1.01);
+    transition: transform 0.1, opacity 0.2s;
   }
 `;
 
@@ -96,8 +134,9 @@ export default class LeftBar extends React.Component {
       theme: useTheme,
       walletsArray: [],
       currencyArray: [],
-      isCreateNewWallet: true,
+      isCreateNewWallet: false,
       isSelectCurrency: false,
+      isDeleteWalletArray: [],
       newWalletName: '',
       newWalletCurrency: '',
       newWalletTargetSum: 0,
@@ -165,9 +204,25 @@ export default class LeftBar extends React.Component {
         if (error) {
           console.log(`Error ${error}`);
         } else {
-          console.log(res.body);
-          console.log(res.body.wallet);
           console.log(res.body.wallet._id);
+          request.post(
+            'http://localhost:4000/api/event/addNewEventToDatabase',
+            {
+              json: {
+                WalletId: res.body.wallet._id,
+                Type: 'Wallet Created',
+                Name: 'First Event',
+                Date: new Date(),
+                Remarks: '',
+                Price: newWalletTotalSum
+              }
+            },
+            (error, res, body) => {
+              if (error) {
+                console.log(`Error ${error}`);
+              }
+            }
+          );
           this.props.fetchAllWallets();
         }
       }
@@ -203,6 +258,28 @@ export default class LeftBar extends React.Component {
       newWalletTargetSum: e.target.value
     });
   };
+  handleIsDeleteWallet = (event, index) => {
+    let { isDeleteWalletArray } = this.state;
+    isDeleteWalletArray[index] = !isDeleteWalletArray[index];
+    this.setState({
+      isDeleteWalletArray: isDeleteWalletArray
+    });
+  };
+
+  handleDeleteWallet = (wallet, index) => {
+    console.log('deleting');
+    let urlToPost =
+      'http://localhost:4000/api/wallet/deleteWalletByWalletId/' + wallet._id;
+    request.post(urlToPost, {}, (error, res, body) => {
+      if (error) {
+        console.log(`Error ${error}`);
+      } else {
+        console.log(`deleted Successfully`);
+        this.handleIsDeleteWallet(0, index);
+        this.props.fetchAllWallets();
+      }
+    });
+  };
 
   render() {
     const { isLeftBarOpen, handleDrawerOpen } = this.props;
@@ -212,7 +289,8 @@ export default class LeftBar extends React.Component {
       currencyArray,
       isCreateNewWallet,
       isSelectCurrency,
-      newWalletCurrency
+      newWalletCurrency,
+      isDeleteWalletArray
     } = this.state;
 
     return (
@@ -234,16 +312,48 @@ export default class LeftBar extends React.Component {
         <List>
           {walletsArray.map((wallet, index) => {
             return (
-              <ListItem
-                button
-                key={wallet._id}
-                onClick={event => this.handleListItemClick(event, wallet)}
-              >
-                <ListItemIcon>
-                  <InboxIcon />
-                </ListItemIcon>
-                <ListItemText primary={wallet.WalletName} />
-              </ListItem>
+              <ListItemContainer>
+                {!isDeleteWalletArray[index] && (
+                  <ListItem button key={wallet._id}>
+                    <ListItemIcon
+                      onClick={event => this.handleListItemClick(event, wallet)}
+                    >
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText
+                      onClick={event => this.handleListItemClick(event, wallet)}
+                      primary={wallet.WalletName}
+                    />
+                    <StyledListItemIcon>
+                      <StyledEditIcon
+                        onClick={event =>
+                          this.handleIsDeleteWallet(event, index)
+                        }
+                      />
+                      <StyledDeleteIcon
+                        onClick={event =>
+                          this.handleIsDeleteWallet(event, index)
+                        }
+                      />
+                    </StyledListItemIcon>
+                  </ListItem>
+                  //onClick={ event => this.handleIsDeleteWallet(event, index)}
+                )}
+                {isDeleteWalletArray[index] && (
+                  <div>
+                    <Button
+                      onClick={event => this.handleDeleteWallet(wallet, index)}
+                    >
+                      Delete
+                    </Button>
+                    <Button
+                      onClick={event => this.handleIsDeleteWallet(event, index)}
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                )}
+              </ListItemContainer>
             );
           })}
         </List>
@@ -255,8 +365,8 @@ export default class LeftBar extends React.Component {
         )}
         {isCreateNewWallet && (
           <div>
-            <p onClick={this.handleIsCreateNewWallet}>X</p>
             <Paper>
+              <CloseButton onClick={this.handleIsCreateNewWallet} />
               <React.Fragment>
                 <TextField
                   type='Wallet Name?'
@@ -302,12 +412,16 @@ export default class LeftBar extends React.Component {
                 </Select>
                 <Button
                   type='submit'
-                  fullWidth
                   variant='contained'
-                  color='primary'
                   onClick={this.handleCreateNewWallet}
                 >
                   Create Wallet
+                </Button>
+                <Button
+                  variant='contained'
+                  onClick={this.handleIsCreateNewWallet}
+                >
+                  Cancel
                 </Button>
               </React.Fragment>
             </Paper>
