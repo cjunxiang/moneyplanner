@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const UserDb = require('./User.model');
 const logger = require('../logger/index.js');
-
+require('dotenv').config();
 const AddNewUserToDatabase = async (req, res) => {
   logger.debug('AddNewUserToDatabase method started.');
   const { email, password } = req.body;
@@ -20,7 +20,7 @@ const AddNewUserToDatabase = async (req, res) => {
 const AuthenticateUser = async (req, res) => {
   logger.debug('AddNewUserToDatabase method started.');
   const { email, password } = req.body;
-  User.findOne({ email }, function(err, user) {
+  UserDb.findOne({ email }, function(err, user) {
     if (err) {
       console.error(err);
       res.status(500).json({
@@ -43,7 +43,7 @@ const AuthenticateUser = async (req, res) => {
         } else {
           // Issue token
           const payload = { email };
-          const token = jwt.sign(payload, secret, {
+          const token = jwt.sign(payload, process.env.AUTH_SECRET, {
             expiresIn: '1h'
           });
           res.cookie('token', token, { httpOnly: true }).sendStatus(200);
