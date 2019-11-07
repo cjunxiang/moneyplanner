@@ -80,12 +80,30 @@ export default class MainPage extends React.Component {
 
   componentDidMount = () => {
     //this.getUserId();
+    this.handleCheckAuth();
     this.fetchAllWallets();
     document.addEventListener('mousedown', this.handleClick);
   };
 
   componentWillUnmount = () => {
     document.removeEventListener('mousedown', this.handleClick);
+  };
+  handleCheckAuth = () => {
+    const { history } = this.props;
+    fetch('localhost:5000/checkToken')
+      .then(res => {
+        if (res.status === 200) {
+          history.push('/login');
+        } else {
+          history.push('/login');
+          const error = new Error(res.error);
+          throw error;
+        }
+      })
+      .catch(err => {
+        history.push('/login');
+        console.error(err);
+      });
   };
 
   handleClick = e => {

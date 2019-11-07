@@ -85,7 +85,10 @@ const ListItemContainer = styled.div`
   width: 28vw;
   min-width: 206px;
   width: 100%;
-  opacity: 0.7;
+`;
+
+const StyledListItem = styled(ListItem)`
+  opacity: 0.6;
   &:hover {
     opacity: 1;
     font-weight: 600;
@@ -93,7 +96,13 @@ const ListItemContainer = styled.div`
     transition: transform 0.1, opacity 0.2s;
   }
 `;
-
+const StyledActiveListItem = styled(ListItem)`
+  &:hover {
+    font-weight: 600;
+    transform: scale(1.1, 1.1);
+    transition: transform 0.1;
+  }
+`;
 const StyledIconButton = styled(IconButton)`
   position: absolute;
   opacity: 0.6;
@@ -109,20 +118,24 @@ const StyledListItemIcon = styled(ListItemIcon)`
 `;
 
 const StyledDeleteIcon = styled(DeleteForeverRoundedIcon)`
-  opacity: 0.4;
+  opacity: 0.2;
+  z-index: 300;
   &:hover {
     opacity: 1;
-    transform: scale(1.01, 1.01);
-    transition: transform 0.1, opacity 0.2s;
+    transform: scale(1.2, 1.2);
+    color: #FFCCCB 
+    transition: transform 0.2, opacity 0.2s;
   }
 `;
 
 const StyledEditIcon = styled(EditOutlinedIcon)`
-  opacity: 0.4;
+  opacity: 0.35;
+  z-index: 300;
   &:hover {
     opacity: 1;
-    transform: scale(1.01, 1.01);
-    transition: transform 0.1, opacity 0.2s;
+    transform: scale(1.2 , 1.2);
+    color: #aec6cf  
+    transition: transform 0.2, opacity 0.2s;
   }
 `;
 
@@ -134,6 +147,7 @@ export default class LeftBar extends React.Component {
       theme: useTheme,
       walletsArray: [],
       currencyArray: [],
+      activeIndex: 1,
       isCreateNewWallet: false,
       isSelectCurrency: false,
       isDeleteWalletArray: [],
@@ -164,6 +178,7 @@ export default class LeftBar extends React.Component {
       walletsArray: walletsArray
     });
   };
+
   updateCurrencyArray = () => {
     Object.keys(currencyList).forEach(index => {
       this.setState({
@@ -171,14 +186,18 @@ export default class LeftBar extends React.Component {
       });
     });
   };
+
   handleIsCreateNewWallet = () => {
     this.setState({
       isCreateNewWallet: !this.state.isCreateNewWallet
     });
   };
 
-  handleListItemClick = (event, wallet) => {
+  handleListItemClick = (event, wallet, index) => {
     this.props.handleChangeActiveWallet(wallet);
+    this.setState({
+      activeIndex: index
+    });
   };
 
   handleCreateNewWallet = () => {
@@ -290,7 +309,8 @@ export default class LeftBar extends React.Component {
       isCreateNewWallet,
       isSelectCurrency,
       newWalletCurrency,
-      isDeleteWalletArray
+      isDeleteWalletArray,
+      activeIndex
     } = this.state;
 
     return (
@@ -313,17 +333,18 @@ export default class LeftBar extends React.Component {
           {walletsArray.map((wallet, index) => {
             return (
               <ListItemContainer>
-                {!isDeleteWalletArray[index] && (
-                  <ListItem button key={wallet._id}>
-                    <ListItemIcon
-                      onClick={event => this.handleListItemClick(event, wallet)}
-                    >
+                {!isDeleteWalletArray[index] && index === activeIndex && (
+                  <StyledActiveListItem
+                    button
+                    key={wallet._id}
+                    onClick={event =>
+                      this.handleListItemClick(event, wallet, index)
+                    }
+                  >
+                    <ListItemIcon>
                       <InboxIcon />
                     </ListItemIcon>
-                    <ListItemText
-                      onClick={event => this.handleListItemClick(event, wallet)}
-                      primary={wallet.WalletName}
-                    />
+                    <ListItemText primary={wallet.WalletName} />
                     <StyledListItemIcon>
                       <StyledEditIcon
                         onClick={event =>
@@ -336,8 +357,33 @@ export default class LeftBar extends React.Component {
                         }
                       />
                     </StyledListItemIcon>
-                  </ListItem>
-                  //onClick={ event => this.handleIsDeleteWallet(event, index)}
+                  </StyledActiveListItem>
+                )}
+                {!isDeleteWalletArray[index] && index !== activeIndex && (
+                  <StyledListItem
+                    button
+                    key={wallet._id}
+                    onClick={event =>
+                      this.handleListItemClick(event, wallet, index)
+                    }
+                  >
+                    <ListItemIcon>
+                      <InboxIcon />
+                    </ListItemIcon>
+                    <ListItemText primary={wallet.WalletName} />
+                    <StyledListItemIcon>
+                      <StyledEditIcon
+                        onClick={event =>
+                          this.handleIsDeleteWallet(event, index)
+                        }
+                      />
+                      <StyledDeleteIcon
+                        onClick={event =>
+                          this.handleIsDeleteWallet(event, index)
+                        }
+                      />
+                    </StyledListItemIcon>
+                  </StyledListItem>
                 )}
                 {isDeleteWalletArray[index] && (
                   <div>

@@ -2,6 +2,8 @@ const express = require('express');
 const app = express();
 const port = 5000;
 
+require('dotenv').config();
+
 app.listen(port, () => logger.listen(`Listening on port ${port}`));
 
 // create a GET route

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const event = require('./db/event.js');
 const wallet = require('./db/wallet.js');
+const user = require('./db/user.js');
 
 /**
  * Event database Functions
@@ -35,6 +36,12 @@ router.post(
   '/wallet/deleteWalletByWalletId/:id',
   wallet.deleteWalletByWalletId
 );
+
+/**
+ * User database Functions
+ */
+router.post('/user/register', user.AddNewUserToDatabase);
+router.post('/user/authenticate', user.AuthenticateUser);
 
 module.exports = router;
 

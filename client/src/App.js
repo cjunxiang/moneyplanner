@@ -1,18 +1,16 @@
 import React from 'react';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import MainPage from './Components/MainPage';
-export default class App extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+import LoginPage from './Components/Authentication/LoginPage';
 
+export default class App extends React.Component {
   render() {
     return (
       <Router>
         <Route exact path='/' component={MainPage} />
-        <Route exact path='/login' component={MainPage} />
+        <Route exact path='/login' component={LoginPage} />
         <Route exact path='/signup' component={MainPage} />
+        <Route exact path='/dataviz' component={MainPage} />
       </Router>
     );
   }
