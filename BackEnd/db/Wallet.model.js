@@ -1,17 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-mongoose.set('useCreateIndex', true);
 
 let Wallet = new Schema({
   //Wallet_id
   WalletName: {
-    type: String,
-    required: true,
-    unique: true
+    type: String
   },
   UserId: {
-    type: Number,
-    required: true
+    type: Number
   },
   TargetSum: {
     type: Number

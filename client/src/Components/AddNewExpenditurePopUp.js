@@ -9,6 +9,7 @@ import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import IncomeForm from './Subcomponents/IncomeForm';
+import ExpenditureForm from './Subcomponents/ExpenditureForm';
 import CloseButton from './Reusable/CloseButton';
 
 import 'react-date-range/dist/styles.css'; // main style file
