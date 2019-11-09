@@ -36,6 +36,11 @@ router.post(
   wallet.deleteWalletByWalletId
 );
 
+/**
+ * User database Functions
+ */
+router.use('/users', require('./db/user'));
+
 module.exports = router;
 
 //Below is for User

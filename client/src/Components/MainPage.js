@@ -63,11 +63,11 @@ export default class MainPage extends React.Component {
       wallets: {},
       currency: 'SGD$',
       activeWallet: {
-        _id: '5db68b8210f659386021e1f0',
-        WalletName: 'Wallet1',
+        _id: '5dc67ed35da4c53108974dd3',
+        WalletName: 'Wallet New',
         UserId: 1,
-        TargetSum: 1,
-        Currency: 'SGD',
+        TargetSum: 999,
+        Currency: 'CNY',
         Active: true,
         __v: 0
       },

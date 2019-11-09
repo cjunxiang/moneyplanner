@@ -38,5 +38,10 @@ const connection = mongoose.connection;
 connection.once('open', function() {
   logger.info('MongoDB database connection established successfully');
 });
+/**
+ * Set up authentication
+ */
+require('./db/UsersSchema');
+require('./db/passport');
 
 module.exports = app;
