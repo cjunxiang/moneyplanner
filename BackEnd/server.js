@@ -20,9 +20,9 @@ app.listen(PORT, error => {
   }
   logger.info(`Server running on ${PORT}`);
 });
-// app.get('*', (req, res) => {
-//   res.sendFile(path.join(__dirname, '../FrontEnd/my-app/build/index.html'));
-// });
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, '../FrontEnd/my-app/build/index.html'));
+});
 app.get('/checkToken', withAuth, function(req, res) {
   res.sendStatus(200);
 });

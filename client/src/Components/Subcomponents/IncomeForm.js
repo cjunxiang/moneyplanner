@@ -12,6 +12,7 @@ export default class IncomeForm extends React.Component {
   componentDidMount = () => {};
 
   render() {
+    const {} = this.props;
     return (
       <Container>
         <p>lai lai lai</p>

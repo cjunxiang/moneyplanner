@@ -81,7 +81,7 @@ export default class MainPage extends React.Component {
   componentDidMount = () => {
     //this.getUserId();
     this.handleCheckAuth();
-
+    this.fetchAllWallets();
     document.addEventListener('mousedown', this.handleClick);
   };
 
@@ -90,12 +90,12 @@ export default class MainPage extends React.Component {
   };
   handleCheckAuth = () => {
     const { history } = this.props;
-    fetch('/checkToken')
+    fetch('localhost:5000/checkToken')
       .then(res => {
         if (res.status === 200) {
-          history.push('/');
-          this.fetchAllWallets();
+          history.push('/login');
         } else {
+          history.push('/login');
           const error = new Error(res.error);
           throw error;
         }
@@ -104,20 +104,6 @@ export default class MainPage extends React.Component {
         history.push('/login');
         console.error(err);
       });
-    // fetch('http://localhost:4000/checkToken')
-    //   .then(res => {
-    //     if (res.status === 200) {
-    //       history.push('/');
-    //     } else {
-    //       history.push('/login');
-    //       const error = new Error(res.error);
-    //       throw error;
-    //     }
-    //   })
-    //   .catch(err => {
-    //     history.push('/login');
-    //     console.error(err);
-    //   });
   };
 
   handleClick = e => {
