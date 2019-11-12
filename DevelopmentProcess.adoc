@@ -1,0 +1,21 @@
+= Development Process
+:site-section: UserGuide
+:toc:
+:toc-title: Table of contents
+:toclevels: 3
+:toc-placement: preamble
+:sectnums:
+:stylesDir: stylesheets
+:xrefstyle: full
+:experimental:
+ifdef::env-github[]
+:tip-caption: :bulb:
+:note-caption: :information_source:
+:warning-caption: :warning:
+endif::[]
+:imagesdir: ./images
+
+=== Initial App Wireframe
+image::LoginPage.jpg[width=350]
+image::MainPage.jpg[width=350]
+image::DataViz.jpg[width=350]
