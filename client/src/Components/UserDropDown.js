@@ -1,17 +1,17 @@
-import React from 'react';
-import styled from 'styled-components';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import Collapse from '@material-ui/core/Collapse';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import DraftsIcon from '@material-ui/icons/Drafts';
-import SendIcon from '@material-ui/icons/Send';
-import ExpandLess from '@material-ui/icons/ExpandLess';
-import ExpandMore from '@material-ui/icons/ExpandMore';
-import StarBorder from '@material-ui/icons/StarBorder';
-const request = require('request');
+import React from "react";
+import styled from "styled-components";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import Collapse from "@material-ui/core/Collapse";
+import InboxIcon from "@material-ui/icons/MoveToInbox";
+import DraftsIcon from "@material-ui/icons/Drafts";
+import SendIcon from "@material-ui/icons/Send";
+import ExpandLess from "@material-ui/icons/ExpandLess";
+import ExpandMore from "@material-ui/icons/ExpandMore";
+import StarBorder from "@material-ui/icons/StarBorder";
+const request = require("request");
 
 const Container = styled.div`
   z-index: 199;
@@ -21,7 +21,7 @@ const Container = styled.div`
   width: 80vw;
   max-width: 300px;
 
-  display: ${({ isDropDown }) => (isDropDown ? 'block' : 'none')} !important;
+  display: ${({ isDropDown }) => (isDropDown ? "block" : "none")} !important;
   opacity: ${({ isDropDown }) => (isDropDown ? 1 : 0)} !important;
 `;
 //#eceaea
@@ -52,15 +52,15 @@ export default class UserDropDown extends React.Component {
 
   testApi = () => {
     request.post(
-      'http://localhost:4000/api/event/addNewEventToDatabase',
+      "http://localhost:4000/api/event/addNewEventToDatabase",
       {
         json: {
           WalletId: 12,
-          Type: 'food',
-          Name: 'uber',
+          Type: "food",
+          Name: "uber",
           Price: 13,
-          Date: '05-05-2010',
-          Remarks: 'remarks'
+          Date: "05-05-2010",
+          Remarks: "remarks"
         }
       },
       (error, res, body) => {
@@ -77,30 +77,30 @@ export default class UserDropDown extends React.Component {
 
   render() {
     const { openSetup } = this.state;
-    const { isDropDown } = this.props;
+    const { isDropDown, handleIsDataViz } = this.props;
     return (
       <Container isDropDown={isDropDown}>
-        <StyledList component='nav'>
+        <StyledList component="nav">
           <ListItem button onClick={this.handleSetupClick}>
             <ListItemIcon>
               <InboxIcon />
             </ListItemIcon>
-            <ListItemText primary='Set-up' />
+            <ListItemText primary="Set-up" />
             {openSetup ? <ExpandLess /> : <ExpandMore />}
           </ListItem>
-          <Collapse in={openSetup} timeout='auto' unmountOnExit>
-            <List component='div' disablePadding>
+          <Collapse in={openSetup} timeout="auto" unmountOnExit>
+            <List component="div" disablePadding>
               <ListItem button onClick={this.setWalletSum}>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>
-                <ListItemText primary='Set initial Sum' />
+                <ListItemText primary="Set initial Sum" />
               </ListItem>
               <ListItem button onClick={this.setWalletTarget}>
                 <ListItemIcon>
                   <StarBorder />
                 </ListItemIcon>
-                <ListItemText primary='Set target' />
+                <ListItemText primary="Set target" />
               </ListItem>
             </List>
           </Collapse>
@@ -108,31 +108,31 @@ export default class UserDropDown extends React.Component {
             <ListItemIcon>
               <SendIcon />
             </ListItemIcon>
-            <ListItemText primary='Go to Telegram Bot (Under Dev)' />
+            <ListItemText primary="Go to Telegram Bot (Under Dev)" />
           </ListItem>
-          <ListItem button>
+          <ListItem button onClick={handleIsDataViz}>
             <ListItemIcon>
               <DraftsIcon />
             </ListItemIcon>
-            <ListItemText primary='View Analytics (Under Dev)' />
+            <ListItemText primary="View Analytics (Under Dev)" />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
               <SendIcon />
             </ListItemIcon>
-            <ListItemText primary='Change Password' />
+            <ListItemText primary="Change Password" />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
               <DraftsIcon />
             </ListItemIcon>
-            <ListItemText primary='Log-out' />
+            <ListItemText primary="Log-out" />
           </ListItem>
           <ListItem button>
             <ListItemIcon>
               <DraftsIcon />
             </ListItemIcon>
-            <ListItemText onClick={this.testApi} primary='Test-Api' />
+            <ListItemText onClick={this.testApi} primary="Test-Api" />
           </ListItem>
         </StyledList>
       </Container>

@@ -1,6 +1,6 @@
-import React from 'react';
-import styled from 'styled-components';
-import UserGroup from './Subcomponents/UserGroup';
+import React from "react";
+import styled from "styled-components";
+import UserGroup from "./Subcomponents/UserGroup";
 
 const Container = styled.div`
   height: 5vh;
@@ -19,9 +19,11 @@ export default class TopBar extends React.Component {
   }
 
   componentDidMount = () => {};
+
   handleDrawerOpen = () => {
     this.props.handleDrawerOpen();
   };
+
   render() {
     const { userName, handleUserDropDown } = this.props;
     return (
