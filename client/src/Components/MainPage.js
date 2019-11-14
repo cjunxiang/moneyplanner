@@ -91,21 +91,21 @@ export default class MainPage extends React.Component {
     document.removeEventListener("mousedown", this.handleClick);
   };
   handleCheckAuth = () => {
-    const { history } = this.props;
-    fetch("/checkToken")
-      .then(res => {
-        if (res.status === 200) {
-          history.push("/");
-          this.fetchAllWallets();
-        } else {
-          const error = new Error(res.error);
-          throw error;
-        }
-      })
-      .catch(err => {
-        history.push("/login");
-        console.error(err);
-      });
+    // const { history } = this.props;
+    // fetch("/checkToken")
+    //   .then(res => {
+    //     if (res.status === 200) {
+    //       history.push("/");
+    //       this.fetchAllWallets();
+    //     } else {
+    //       const error = new Error(res.error);
+    //       throw error;
+    //     }
+    //   })
+    //   .catch(err => {
+    //     history.push("/login");
+    //     console.error(err);
+    //   });
     // fetch('http://localhost:4000/checkToken')
     //   .then(res => {
     //     if (res.status === 200) {
