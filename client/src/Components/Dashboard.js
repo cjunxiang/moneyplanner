@@ -1,13 +1,13 @@
-import React from 'react';
-import styled from 'styled-components';
-import { forwardRef } from 'react';
-import MaterialTable from 'material-table';
-import Fab from '@material-ui/core/Fab';
-import Button from '@material-ui/core/Button';
-import Tooltip from '@material-ui/core/Tooltip';
-import { DateRangePicker } from 'react-date-range';
+import React from "react";
+import styled from "styled-components";
+import { forwardRef } from "react";
+import MaterialTable from "material-table";
+import Fab from "@material-ui/core/Fab";
+import Button from "@material-ui/core/Button";
+import Tooltip from "@material-ui/core/Tooltip";
+import { DateRangePicker } from "react-date-range";
 // import enGb from 'react-date-range/dist/locale/en-GB';
-import { addDays } from 'date-fns';
+import { addDays } from "date-fns";
 
 import {
   Add,
@@ -28,12 +28,12 @@ import {
   ViewColumn,
   Visibility,
   VisibilityOff
-} from '@material-ui/icons';
-import Loading from './Reusable/Loading';
-import CloseButton from './Reusable/CloseButton';
-import 'react-date-range/dist/styles.css'; // main style file
-import 'react-date-range/dist/theme/default.css'; // theme css file
-const request = require('request');
+} from "@material-ui/icons";
+import Loading from "./Reusable/Loading";
+import CloseButton from "./Reusable/CloseButton";
+import "react-date-range/dist/styles.css"; // main style file
+import "react-date-range/dist/theme/default.css"; // theme css file
+const request = require("request");
 
 const StyledCloseButton = styled(CloseButton)`
   right: 0;
@@ -166,7 +166,7 @@ export default class Dashboard extends React.Component {
         selection: {
           endDate: new Date(),
           startDate: addDays(new Date(), -7),
-          key: 'selection'
+          key: "selection"
         }
       },
       totalSum: 0,
@@ -180,11 +180,11 @@ export default class Dashboard extends React.Component {
       focusedRange: [0, 0],
       data: [],
       columns: [
-        { title: 'Type', field: 'Type' },
-        { title: 'Expenditure', field: 'Name' },
-        { title: 'Amount', field: 'Price', type: 'numeric' },
-        { title: 'Date', field: 'Date' },
-        { title: 'Remarks', field: 'Remarks' }
+        { title: "Type", field: "Type" },
+        { title: "Expenditure", field: "Name" },
+        { title: "Amount", field: "Price", type: "numeric" },
+        { title: "Date", field: "Date" },
+        { title: "Remarks", field: "Remarks" }
       ]
     };
   }
@@ -209,7 +209,7 @@ export default class Dashboard extends React.Component {
   getWalletDetails = () => {
     const { activeWallet } = this.props;
     let urlToPost =
-      'http://localhost:4000/api/wallet/fetchWalletByWalletId/' +
+      "http://localhost:4000/api/wallet/fetchWalletByWalletId/" +
       activeWallet._id;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
@@ -229,7 +229,7 @@ export default class Dashboard extends React.Component {
     const endDateDate = new Date(dateRangePicker.selection.endDate);
 
     request.post(
-      'http://localhost:4000/api/event/fetchAllEventByWalletId/' +
+      "http://localhost:4000/api/event/fetchAllEventByWalletId/" +
         activeWallet._id,
       {},
       (error, res, body) => {
@@ -268,13 +268,13 @@ export default class Dashboard extends React.Component {
   parseDateToString = date => {
     const currentDate = new Date(date);
     return currentDate
-      .toLocaleDateString('en-SG', {
-        month: 'short',
-        day: 'numeric',
-        year: '2-digit'
+      .toLocaleDateString("en-SG", {
+        month: "short",
+        day: "numeric",
+        year: "2-digit"
       })
-      .split(' ')
-      .join(' ');
+      .split(" ")
+      .join(" ");
   };
 
   handleConfirmSelectDates = async (which, payload) => {
@@ -308,11 +308,11 @@ export default class Dashboard extends React.Component {
 
   handleTableAdd = async newData => {
     request.post(
-      'http://localhost:4000/api/event/addNewEventToDatabase',
+      "http://localhost:4000/api/event/addNewEventToDatabase",
       {
         json: {
           ...newData,
-          WalletId: this.props.activeWallet.WalletId,
+          WalletId: this.props.activeWallet._id,
           Price: parseInt(newData.Price)
         }
       },
@@ -328,13 +328,13 @@ export default class Dashboard extends React.Component {
   handleTableUpdate = async (newData, oldData) => {
     let IdToBeUpdated = oldData._id;
     let urlToPost =
-      'http://localhost:4000/api/event/editEventByEventId/' + IdToBeUpdated;
+      "http://localhost:4000/api/event/editEventByEventId/" + IdToBeUpdated;
     request.post(
       urlToPost,
       {
         json: {
           ...newData,
-          WalletId: this.props.activeWallet.WalletId,
+          WalletId: this.props.activeWallet._id,
           Price: parseInt(newData.Price)
         }
       },
@@ -350,27 +350,27 @@ export default class Dashboard extends React.Component {
 
   handleTableDelete = async oldDataId => {
     let urlToPost =
-      'http://localhost:4000/api/event/deleteEventByEventId/' + oldDataId;
+      "http://localhost:4000/api/event/deleteEventByEventId/" + oldDataId;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
         console.log(`Error ${error}`);
       }
-      console.log('deleted Successfully');
+      console.log("deleted Successfully");
       this.getEventsDetails();
     });
   };
 
   toInt = sum => {
-    return sum.replace(/,/g, '');
+    return sum.replace(/,/g, "");
   };
 
   getSumDifference = () => {
     const { goalSum, totalSum } = this.state;
     let diff = goalSum - totalSum;
     if (diff >= 0) {
-      return '+' + diff;
+      return "+" + diff;
     } else {
-      return '-' + diff;
+      return "-" + diff;
     }
   };
 
@@ -402,7 +402,7 @@ export default class Dashboard extends React.Component {
                   <MainSumText>
                     <Tooltip
                       isShowTable={isShowTable}
-                      title='Show/Hide Details'
+                      title="Show/Hide Details"
                     >
                       <p onClick={this.handleIsShowTable}>
                         {activeWallet.Currency}
@@ -419,15 +419,15 @@ export default class Dashboard extends React.Component {
                   <br />
                   {this.parseDateToString(
                     this.state.dateRangePicker.selection.startDate
-                  )}{' '}
-                  -{' '}
+                  )}{" "}
+                  -{" "}
                   {this.parseDateToString(
                     this.state.dateRangePicker.selection.endDate
                   )}
                   <br />
                   <Button
-                    variant='contained'
-                    size='small'
+                    variant="contained"
+                    size="small"
                     onClick={this.handleSelectDateRange}
                   >
                     Select Date
@@ -435,7 +435,7 @@ export default class Dashboard extends React.Component {
                   <br />
                   Goal is: {this.getSumDifference()}
                   <br />
-                  <Tooltip title='Hide what hide, alot of money meh?'>
+                  <Tooltip title="Hide what hide, alot of money meh?">
                     <StyledVisibilityIcon onClick={this.handleIsShowSum} />
                   </Tooltip>
                 </div>
@@ -450,9 +450,9 @@ export default class Dashboard extends React.Component {
                   <StyledVisibilityOffIcon onClick={this.handleIsShowSum} />
                 </div>
               )}
-              <Tooltip title='Spend again ah?'>
+              <Tooltip title="Spend again ah?">
                 <BottomFloatingButton>
-                  <Fab onClick={handleAddNewItem} size='medium' color='default'>
+                  <Fab onClick={handleAddNewItem} size="medium" color="default">
                     <Add />
                   </Fab>
                 </BottomFloatingButton>
@@ -461,7 +461,7 @@ export default class Dashboard extends React.Component {
             {isShowTable && (
               <TableContainer>
                 <MaterialTable
-                  title='Waliu... can eat so many plate of chicken rice sia'
+                  title="Waliu... can eat so many plate of chicken rice sia"
                   columns={columns}
                   data={data}
                   editable={{
@@ -521,7 +521,7 @@ export default class Dashboard extends React.Component {
                   <DateRangePicker
                     onChange={this.handleConfirmSelectDates.bind(
                       this,
-                      'dateRangePicker'
+                      "dateRangePicker"
                     )}
                     showSelectionPreview={true}
                     moveRangeOnFirstSelection={false}

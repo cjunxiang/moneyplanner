@@ -1,12 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
-import Dashboard from './Dashboard';
-import TopBar from './TopBar';
-import LeftBar from './LeftBar';
-import UserDropDown from './UserDropDown';
-import AddNewExpenditurePopUp from './AddNewExpenditurePopUp.js';
-import moment from 'moment';
-const request = require('request');
+import React from "react";
+import styled from "styled-components";
+import Dashboard from "./Dashboard";
+import TopBar from "./TopBar";
+import LeftBar from "./LeftBar";
+import UserDropDown from "./UserDropDown";
+import AddNewExpenditurePopUp from "./AddNewExpenditurePopUp.js";
+import moment from "moment";
+const request = require("request");
 
 const MainPageContainer = styled.div`
   font-family: comfortaa, serif;
@@ -14,7 +14,7 @@ const MainPageContainer = styled.div`
 
 const StyledLeftBar = styled(LeftBar)`
   display: ${({ isleftbaropen }) =>
-    isleftbaropen ? 'block' : 'none'} !important;
+    isleftbaropen ? "block" : "none"} !important;
   position: fixed;
   left: 0;
   top: 0;
@@ -58,20 +58,20 @@ export default class MainPage extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      userName: 'C.Junxiang',
+      userName: "C.Junxiang",
       userId: 1,
       wallets: {},
-      currency: 'SGD$',
+      currency: "SGD$",
       activeWallet: {
-        _id: '5db68b8210f659386021e1f0',
-        WalletName: 'Wallet1',
+        _id: "5e4b9f6d04ab2107c7c90ea3",
+        WalletName: "Wallet1",
         UserId: 1,
         TargetSum: 1,
-        Currency: 'SGD',
+        Currency: "SGD",
         Active: true,
         __v: 0
       },
-      userIcon: '',
+      userIcon: "",
       isDropDown: false,
       isAddItem: false,
       isLeftBarOpen: false
@@ -80,20 +80,21 @@ export default class MainPage extends React.Component {
 
   componentDidMount = () => {
     //this.getUserId();
-    this.handleCheckAuth();
-
-    document.addEventListener('mousedown', this.handleClick);
+    // this.handleCheckAuth();
+    this.fetchAllWallets();
+    document.addEventListener("mousedown", this.handleClick);
   };
 
   componentWillUnmount = () => {
-    document.removeEventListener('mousedown', this.handleClick);
+    document.removeEventListener("mousedown", this.handleClick);
   };
+
   handleCheckAuth = () => {
     const { history } = this.props;
-    fetch('/checkToken')
+    fetch("/checkToken")
       .then(res => {
         if (res.status === 200) {
-          history.push('/');
+          history.push("/");
           this.fetchAllWallets();
         } else {
           const error = new Error(res.error);
@@ -101,7 +102,7 @@ export default class MainPage extends React.Component {
         }
       })
       .catch(err => {
-        history.push('/login');
+        history.push("/login");
         console.error(err);
       });
     // fetch('http://localhost:4000/checkToken')
@@ -129,7 +130,7 @@ export default class MainPage extends React.Component {
   fetchAllWallets = async () => {
     const { userId } = this.state;
     let urlToPost =
-      'http://localhost:4000/api/wallet/fetchAllWalletByUserId/' + userId;
+      "http://localhost:4000/api/wallet/fetchAllWalletByUserId/" + userId;
     request.post(urlToPost, {}, (error, res, body) => {
       if (error) {
         console.log(`Error ${error}`);
@@ -142,10 +143,10 @@ export default class MainPage extends React.Component {
   };
 
   parseDateIntoString = date => {
-    return moment(date).format('Do MMM dddd h:mm a');
+    return moment(date).format("Do MMM dddd h:mm a");
   };
   parseSumWithComma = number => {
-    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
   handleUserDropDown = () => {
@@ -188,10 +189,10 @@ export default class MainPage extends React.Component {
       userId
     } = this.state;
     return (
-      <MainPageContainer id='mpc'>
-        <DropDownGroup id='ddg' ref={node => (this.node = node)}>
+      <MainPageContainer id="mpc">
+        <DropDownGroup id="ddg" ref={node => (this.node = node)}>
           <StyledTopBar
-            id='topbar'
+            id="topbar"
             userName={userName}
             isDropDown={isDropDown}
             handleUserDropDown={this.handleUserDropDown}
